@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "BarberFlow.API": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:58105;http://localhost:58106"
+    }
+  }
+}
