@@ -2,28 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace BarberFlow.Application.AuthItems.Login;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
+public class LoginCommandHandler(ILogger logger) : IRequestHandler<LoginCommand, string>
 {
-    var user = await _userRepository.GetFullUserByCpf(loginDTO.Cpf);
+    private readonly ILogger _logger = logger;
 
-            if (user is null)
-            {
-                _logger.LogWarning("Login failed for CPF {Cpf}: user not found", loginDTO.Cpf);
-                throw new UnauthorizedAccessException("Invalid CPF or Password!");
-            }
-            
-            if (!SecurityUtils.VerifyPassword(loginDTO.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                _logger.LogWarning("Login failed for CPF {Cpf}: incorrect password", loginDTO.Cpf);
-                throw new UnauthorizedAccessException("Invalid CPF or Password!");
-            }
-
-            if (!user.IsActive)
-{
-    _logger.LogWarning("Login failed for CPF {Cpf}: user inactive", loginDTO.Cpf);
-    throw new UnauthorizedAccessException("User is inactive!");
-}
+    public async Task<Token> Handle(LoginCommand request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Handling login command for Email {Email}", request.Email);
+        await Helpers.ValidateUserCredentials(request.Email, request.Password);
+        // Generate JWT token or similar authentication token here
+        string token = ; // Placeholder for actual token generation logic
+        _logger.LogInformation("Login successful for CPF {Cpf}", request.LoginDTO.Cpf);
+        return token;
+    }
 }

@@ -2,5 +2,5 @@
 
 public interface IUserRepository
 {
-    Task<string> GetUserByEmailAsync(string email, string password);
+    Task<Token> GetUserByEmailAsync(string email, string password);
 }

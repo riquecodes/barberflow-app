@@ -6,6 +6,8 @@ public class Helpers(IUserRepository userRepository)
 
     public static async Task ValidateUserCredentials(string email, string password)
     {
-        var user = await
+        var user = await _userRepository.GetUserByEmailAsync(email);
+
+        if (user)
     }
 }
