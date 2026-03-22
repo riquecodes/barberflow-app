@@ -1,0 +1,10 @@
+﻿using MediatR;
+
+namespace BarberFlow.Application.AuthItems.Login;
+
+public class LoginCommand: IRequest<string>
+{
+    public required string Email { get; set; }
+
+    public required string Password { get; set; }
+}
