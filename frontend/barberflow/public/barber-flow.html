@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barber Flow – Telas do App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1208 50%, #0a0a0a 100%);
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      padding: 48px 24px;
+      color: #fff;
+    }
+
+    /* ─── PAGE HEADER ─────────────────────────────── */
+    .page-header { text-align: center; margin-bottom: 56px; }
+    .page-header .logo-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-bottom: 12px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #0a0a0a; font-weight: 700; flex-shrink: 0;
+    }
+    .page-header h1 { font-size: 32px; font-weight: 800; color: #C9A84C; letter-spacing: -0.5px; }
+    .page-header p  { color: #888; font-size: 15px; }
+    .gold-line {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+      margin: 16px auto 0;
+    }
+
+    /* ─── SCREENS GRID ────────────────────────────── */
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+      gap: 48px;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .screen-wrapper { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+    /* ─── PHONE FRAME ─────────────────────────────── */
+    .phone {
+      width: 300px; height: 640px;
+      border-radius: 40px;
+      border: 3px solid #2a2a2a;
+      box-shadow: 0 0 0 1px #C9A84C33, 0 32px 64px rgba(0,0,0,.7), inset 0 0 0 1px #333;
+      overflow: hidden;
+      position: relative;
+      background: #111;
+      flex-shrink: 0;
+    }
+    .status-bar {
+      height: 36px; background: rgba(0,0,0,.9);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px;
+      position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+      font-size: 11px; font-weight: 600; color: #fff;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; }
+    .notch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 100px; height: 28px;
+      background: #000;
+      border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+      z-index: 11;
+    }
+    .screen-content { position: absolute; inset: 0; top: 36px; overflow-y: auto; }
+
+    /* ─── SCREEN LABEL ────────────────────────────── */
+    .screen-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      color: #0a0a0a;
+      font-size: 12px; font-weight: 700;
+      padding: 5px 16px; border-radius: 20px;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    .page-footer { text-align: center; margin-top: 64px; color: #555; font-size: 13px; }
+
+    /* ════════════════════════════════════════════════
+       SCREEN STYLES
+    ════════════════════════════════════════════════ */
+    .screen { height: 100%; background: #0D0D0D; display: flex; flex-direction: column; }
+
+    /* shared utils */
+    .gold     { color: #C9A84C; }
+    .dim      { color: #888; }
+    .muted    { color: #666; }
+    .tiny     { font-size: 10px; font-weight: 600; letter-spacing: .5px; }
+    .section-title { color: #888; font-size: 10px; font-weight: 600; letter-spacing: .5px; margin: 0 0 8px; }
+
+    .gold-btn {
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      border-radius: 14px; padding: 14px;
+      text-align: center; color: #0a0a0a;
+      font-weight: 700; font-size: 14px;
+      box-shadow: 0 6px 20px rgba(201,168,76,.4);
+    }
+    .card {
+      background: #141414; border: 1px solid #222;
+      border-radius: 14px; padding: 14px;
+    }
+    .input-row {
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      border-radius: 12px; padding: 12px 14px;
+      display: flex; align-items: center; gap: 10;
+      color: #444; font-size: 13px;
+    }
+    .input-active { border-color: #C9A84C55; }
+    .divider { height: 1px; background: #1a1a1a; margin: 14px 0; }
+
+    /* ─── LOGIN ──────────────────────────────────── */
+    #login .inner { padding: 0 24px; display: flex; flex-direction: column; height: 100%; }
+    #login .logo-area { text-align: center; padding-top: 40px; padding-bottom: 32px; }
+    #login .app-icon {
+      width: 72px; height: 72px; border-radius: 22px;
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; box-shadow: 0 8px 24px rgba(201,168,76,.35);
+      font-size: 32px;
+    }
+    #login h2 { color: #fff; font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+    #login .subtitle { color: #888; font-size: 12px; }
+    #login .form { display: flex; flex-direction: column; gap: 12px; }
+    #login label { color: #aaa; font-size: 11px; font-weight: 600; letter-spacing: .5px; display: block; margin-bottom: 6px; }
+    #login .forgot { text-align: right; color: #C9A84C; font-size: 12px; font-weight: 600; }
+    #login .or-row { display: flex; align-items: center; gap: 10; margin: 4px 0; }
+    #login .or-line { flex: 1; height: 1px; background: #222; }
+    #login .or-text { color: #555; font-size: 11px; }
+    #login .google-btn {
+      background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 14px;
+      padding: 12px; display: flex; align-items: center; justify-content: center; gap: 10;
+    }
+    #login .g-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #ea4335, #fbbc04, #34a853, #4285f4); }
+    #login .g-txt { color: #ccc; font-size: 13px; font-weight: 600; }
+    #login .login-footer { text-align: center; margin-top: auto; padding: 20px 0 24px; }
+    #login .login-footer span { color: #666; font-size: 12px; }
+    #login .login-footer a   { color: #C9A84C; font-size: 12px; font-weight: 700; }
+
+    /* ─── REGISTER ───────────────────────────────── */
+    #register .back-bar { padding: 16px 20px 0; display: flex; align-items: center; gap: 12px; }
+    #register .back-icon {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 14px;
+    }
+    #register .back-txt { color: #aaa; font-size: 13px; font-weight: 600; }
+    #register .inner { padding: 20px 24px 0; }
+    #register .top-row { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+    #register .reg-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; box-shadow: 0 4px 12px rgba(201,168,76,.3); flex-shrink: 0;
+    }
+    #register h3 { color: #fff; font-size: 16px; font-weight: 700; margin: 0; }
+    #register .sub { color: #666; font-size: 11px; }
+    #register .progress { display: flex; gap: 4px; margin-bottom: 22px; }
+    #register .prog-bar { flex: 1; height: 4px; border-radius: 4px; background: #222; }
+    #register .prog-bar.active { background: linear-gradient(90deg, #C9A84C, #e8c96e); }
+    #register .fields { display: flex; flex-direction: column; gap: 10px; }
+    #register label { color: #888; font-size: 10px; font-weight: 600; letter-spacing: .8px; display: block; margin-bottom: 5px; }
+    #register .f-row {
+      background: #171717; border: 1px solid #222; border-radius: 11px;
+      padding: 10px 13px; display: flex; align-items: center; gap: 9px;
+      color: #333; font-size: 12px;
+    }
+    #register .f-row.act { border-color: #C9A84C55; color: #C9A84C88; }
+    #register .terms { display: flex; align-items: flex-start; gap: 9px; margin-top: 14px; }
+    #register .check {
+      width: 16px; height: 16px; border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      display: flex; align-items: center; justify-content: center; font-size: 9px; color: #0a0a0a;
+    }
+    #register .terms p { color: #555; font-size: 10px; line-height: 1.5; }
+    #register .terms a { color: #C9A84C; }
+    #register .reg-btn {
+      background: linear-gradient(135deg, #C9A84C, #e8c96e); border-radius: 14px;
+      padding: 14px; text-align: center; color: #0a0a0a; font-weight: 700; font-size: 14px;
+      margin-top: 18px; box-shadow: 0 6px 20px rgba(201,168,76,.4);
+    }
+    #register .reg-footer { text-align: center; margin-top: 14px; padding-bottom: 20px; }
+    #register .reg-footer span { color: #555; font-size: 12px; }
+    #register .reg-footer a   { color: #C9A84C; font-size: 12px; font-weight: 700; }
+
+    /* ─── CALENDAR ───────────────────────────────── */
+    #calendar .cal-header {
+      padding: 16px 20px 12px; border-bottom: 1px solid #1a1a1a;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    #calendar .cal-title-label { color: #888; font-size: 10px; font-weight: 600; letter-spacing: .5px; margin: 0 0 2px; }
+    #calendar h3 { color: #fff; font-size: 16px; font-weight: 700; margin: 0; }
+    #calendar .nav-btns { display: flex; gap: 8px; }
+    #calendar .nav-btn {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      display: flex; align-items: center; justify-content: center;
+      color: #aaa; font-size: 13px; font-weight: 700;
+    }
+    #calendar .body { padding: 14px 16px; flex: 1; }
+    #calendar .day-headers { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 6px; }
+    #calendar .day-hdr { text-align: center; color: #555; font-size: 10px; font-weight: 700; padding: 4px 0; }
+    #calendar .week { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 2px; }
+    #calendar .day {
+      aspect-ratio: 1; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500; color: #ccc; position: relative;
+    }
+    #calendar .day.past  { background: #1a1a1a; color: #555; }
+    #calendar .day.today { background: linear-gradient(135deg, #C9A84C, #e8c96e); color: #0a0a0a; font-weight: 700; }
+    #calendar .day.dot::after {
+      content:''; position: absolute; bottom: 3px;
+      width: 4px; height: 4px; border-radius: 50%; background: #C9A84C;
+    }
+    #calendar .day.empty { background: transparent; }
+    .barbers-row { display: flex; gap: 8px; margin-bottom: 14px; }
+    .barber-chip {
+      flex: 1; background: #1a1a1a; border: 1px solid #222; border-radius: 12px;
+      padding: 8px 6px; text-align: center;
+    }
+    .barber-chip.sel {
+      background: linear-gradient(135deg, #C9A84C22, #e8c96e11);
+      border-color: #C9A84C;
+    }
+    .barber-chip .b-icon { font-size: 18px; margin-bottom: 3px; }
+    .barber-chip .b-name { font-size: 9px; font-weight: 600; color: #777; }
+    .barber-chip.sel .b-name { color: #C9A84C; }
+    .times-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+    .time-slot {
+      border-radius: 10px; padding: 9px 6px; text-align: center;
+      font-size: 12px; font-weight: 600;
+      background: #1a1a1a; border: 1px solid #222; color: #ccc;
+    }
+    .time-slot.sel { background: linear-gradient(135deg, #C9A84C, #e8c96e); color: #0a0a0a; border: none; }
+    .time-slot.off { color: #333; text-decoration: line-through; }
+
+    /* ─── ADMIN ──────────────────────────────────── */
+    #admin .adm-header { padding: 14px 18px 12px; background: linear-gradient(180deg,#111 0%,#0D0D0D 100%); border-bottom: 1px solid #1a1a1a; }
+    #admin .adm-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    #admin .adm-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    #admin .stats { display: flex; gap: 7px; }
+    #admin .stat {
+      flex: 1; background: #171717; border: 1px solid #222;
+      border-radius: 12px; padding: 8px; text-align: center;
+    }
+    #admin .stat-icon { font-size: 14px; margin-bottom: 2px; }
+    #admin .stat-val { font-size: 12px; font-weight: 700; }
+    #admin .stat-lbl { color: #555; font-size: 9px; font-weight: 600; }
+    #admin .adm-body { padding: 12px 18px; flex: 1; overflow-y: auto; }
+    #admin .quick-actions { display: flex; gap: 8px; margin-bottom: 14px; }
+    #admin .qa {
+      flex: 1; background: #1a1a1a; border: 1px solid #222;
+      border-radius: 11px; padding: 9px 6px; text-align: center;
+    }
+    #admin .qa.main { background: linear-gradient(135deg, #C9A84C, #e8c96e); border: none; }
+    #admin .qa-icon { font-size: 14px; margin-bottom: 2px; }
+    #admin .qa-label { color: #666; font-size: 8px; font-weight: 700; }
+    #admin .qa.main .qa-label { color: #0a0a0a; }
+    #admin .agenda-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    #admin .see-all { color: #C9A84C; font-size: 10px; font-weight: 600; }
+    #admin .apt {
+      background: #141414; border: 1px solid #222; border-radius: 12px;
+      padding: 10px 12px; display: flex; align-items: center; gap: 10; margin-bottom: 7px;
+    }
+    #admin .apt.current { background: linear-gradient(135deg, #C9A84C15, #e8c96e08); border-color: #C9A84C44; }
+    #admin .apt.done { opacity: .5; }
+    #admin .apt-time { text-align: center; min-width: 36px; font-size: 10px; font-weight: 700; color: #888; }
+    #admin .apt.current .apt-time { color: #C9A84C; }
+    #admin .apt-line { width: 1px; height: 32px; background: #222; flex-shrink: 0; }
+    #admin .apt.current .apt-line { background: #C9A84C44; }
+    #admin .apt-name { color: #ddd; font-size: 12px; font-weight: 600; }
+    #admin .apt.done .apt-name { color: #666; }
+    #admin .apt-svc { color: #555; font-size: 10px; }
+    #admin .apt-right { text-align: right; margin-left: auto; }
+    #admin .apt-val { font-size: 10px; font-weight: 700; color: #777; }
+    #admin .apt.current .apt-val { color: #C9A84C; }
+    #admin .apt.done .apt-val { color: #4CAF50; }
+    #admin .apt-status { font-size: 8px; font-weight: 600; color: #444; margin-top: 2px; }
+    #admin .apt.current .apt-status { color: #C9A84C; }
+    #admin .apt.done .apt-status { color: #4CAF5088; }
+    #admin .bot-nav {
+      background: #0D0D0D; border-top: 1px solid #1a1a1a;
+      padding: 10px 20px 12px; display: flex; justify-content: space-around;
+    }
+    #admin .nav-tab { text-align: center; flex: 1; }
+    #admin .nav-tab .t-icon { font-size: 16px; }
+    #admin .nav-tab .t-label { font-size: 8px; font-weight: 600; color: #444; margin-top: 2px; }
+    #admin .nav-tab.active .t-label { color: #C9A84C; }
+    #admin .nav-dot { width: 16px; height: 2px; background: #C9A84C; border-radius: 2px; margin: 3px auto 0; }
+
+    /* ─── PAYMENT ─────────────────────────────────── */
+    #payment .pay-header {
+      padding: 14px 20px 12px; border-bottom: 1px solid #1a1a1a;
+      display: flex; align-items: center; gap: 10;
+    }
+    #payment .back-icon {
+      width: 30px; height: 30px; border-radius: 9px;
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 14px;
+    }
+    #payment .pay-body { padding: 14px 18px; flex: 1; overflow-y: auto; }
+    #payment .order-icon {
+      width: 44px; height: 44px; border-radius: 12px; font-size: 20px;
+      background: linear-gradient(135deg, #C9A84C22, #e8c96e11);
+      border: 1px solid #C9A84C44;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    #payment .order-info { flex: 1; }
+    #payment .order-name { color: #ddd; font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    #payment .order-sub  { color: #666; font-size: 11px; }
+    #payment .order-date { color: #888; font-size: 10px; }
+    #payment .line-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    #payment .line-row span:first-child { color: #666; font-size: 11px; }
+    #payment .line-row span:last-child  { color: #aaa; font-size: 11px; }
+    #payment .line-row.green span:last-child { color: #4CAF50; font-weight: 600; }
+    #payment .total-row { display: flex; justify-content: space-between; border-top: 1px solid #1a1a1a; padding-top: 8px; margin-top: 2px; }
+    #payment .total-label { color: #fff; font-size: 13px; font-weight: 700; }
+    #payment .total-val   { color: #C9A84C; font-size: 14px; font-weight: 700; }
+    #payment .method {
+      background: #141414; border: 1px solid #222; border-radius: 14px;
+      padding: 12px 14px; display: flex; align-items: center; gap: 12; margin-bottom: 8px;
+    }
+    #payment .method.sel { background: linear-gradient(135deg,#C9A84C15,#e8c96e08); border: 1.5px solid #C9A84C; }
+    #payment .m-icon {
+      width: 38px; height: 38px; border-radius: 10px; font-size: 18px; flex-shrink: 0;
+      background: #1a1a1a; border: 1px solid #222;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #payment .method.sel .m-icon { background: #32B78822; border-color: #32B78844; }
+    #payment .m-title { color: #fff; font-size: 13px; font-weight: 600; }
+    #payment .method:not(.sel) .m-title { color: #aaa; }
+    #payment .m-sub { font-size: 10px; }
+    #payment .method.sel .m-sub { color: #32B788; font-weight: 600; }
+    #payment .method:not(.sel) .m-sub { color: #555; }
+    #payment .radio {
+      width: 20px; height: 20px; border-radius: 50%; margin-left: auto; flex-shrink: 0;
+    }
+    #payment .radio.filled {
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #payment .radio.filled::after { content:''; width: 8px; height: 8px; border-radius: 50%; background: #0a0a0a; }
+    #payment .radio.empty { border: 2px solid #333; }
+    #payment .coupon {
+      background: #141414; border: 1px dashed #2a2a2a; border-radius: 14px;
+      padding: 11px 14px; display: flex; align-items: center; gap: 10; margin-bottom: 8px;
+    }
+    #payment .pay-btn {
+      background: linear-gradient(135deg, #C9A84C, #e8c96e); border-radius: 16px;
+      padding: 15px; text-align: center; color: #0a0a0a; font-weight: 700; font-size: 14px;
+      margin-top: 14px; box-shadow: 0 6px 20px rgba(201,168,76,.4);
+    }
+
+    /* ─── RATING ──────────────────────────────────── */
+    #rating .rat-header {
+      padding: 14px 20px 12px; border-bottom: 1px solid #1a1a1a;
+      display: flex; align-items: center; gap: 10;
+    }
+    #rating .back-icon {
+      width: 30px; height: 30px; border-radius: 9px;
+      background: #1a1a1a; border: 1px solid #2a2a2a;
+      display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 14px;
+    }
+    #rating .rat-body { padding: 16px 20px; flex: 1; overflow-y: auto; }
+    #rating .barber-card {
+      background: linear-gradient(135deg, #141414, #1a1408);
+      border: 1px solid #C9A84C33; border-radius: 16px;
+      padding: 14px; display: flex; align-items: center; gap: 12; margin-bottom: 18px;
+    }
+    #rating .b-avatar {
+      width: 50px; height: 50px; border-radius: 50%; font-size: 22px; flex-shrink: 0;
+      background: linear-gradient(135deg, #C9A84C, #e8c96e);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #rating .b-info { flex: 1; }
+    #rating .b-name { color: #fff; font-size: 14px; font-weight: 700; }
+    #rating .b-detail { color: #888; font-size: 11px; }
+    #rating .b-stars { display: flex; gap: 2px; margin-top: 4px; color: #C9A84C; font-size: 10px; }
+    #rating .b-stars span { color: #C9A84C; font-size: 10px; font-weight: 600; margin-left: 3px; }
+    #rating .b-val { color: #C9A84C; font-size: 13px; font-weight: 700; }
+    #rating .b-paid { color: #4CAF50; font-size: 9px; font-weight: 600; }
+    #rating .overall { text-align: center; margin-bottom: 18px; }
+    #rating .big-stars { display: flex; justify-content: center; gap: 8px; margin-bottom: 4px; }
+    #rating .big-stars span { font-size: 30px; color: #C9A84C; filter: drop-shadow(0 0 6px rgba(201,168,76,.5)); }
+    #rating .overall-label { color: #C9A84C; font-size: 13px; font-weight: 700; }
+    #rating .aspects { background: #141414; border: 1px solid #1e1e1e; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; }
+    #rating .aspect-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    #rating .aspect-row:last-child { margin-bottom: 0; }
+    #rating .asp-label { color: #aaa; font-size: 11px; flex: 1; }
+    #rating .asp-stars { display: flex; gap: 2px; }
+    #rating .asp-stars span { font-size: 13px; }
+    #rating .asp-stars span.on  { color: #C9A84C; }
+    #rating .asp-stars span.off { color: #2a2a2a; }
+    #rating .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    #rating .tag {
+      padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: 600;
+      background: #141414; border: 1px solid #222; color: #555;
+    }
+    #rating .tag.sel { background: linear-gradient(135deg,#C9A84C22,#e8c96e11); border-color: #C9A84C; color: #C9A84C; }
+    #rating .comment-box {
+      background: #141414; border: 1px solid #C9A84C44;
+      border-radius: 12px; padding: 10px 12px; min-height: 64px;
+      color: #444; font-size: 11px; font-family: inherit; margin-bottom: 14px;
+    }
+    #rating .rat-btn {
+      background: linear-gradient(135deg, #C9A84C, #e8c96e); border-radius: 16px;
+      padding: 14px; text-align: center; color: #0a0a0a; font-weight: 700; font-size: 14px;
+      box-shadow: 0 6px 20px rgba(201,168,76,.4);
+    }
+    #rating .rat-note { color: #444; font-size: 10px; text-align: center; margin: 10px 0 0; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ PAGE HEADER ═══════════════════════════════════ -->
+  <div class="page-header">
+    <div class="logo-row">
+      <div class="logo-icon">✂</div>
+      <h1>Barber Flow</h1>
+    </div>
+    <p>Wireframes das telas do aplicativo mobile</p>
+    <div class="gold-line"></div>
+  </div>
+
+  <!-- ═══ SCREENS GRID ══════════════════════════════════ -->
+  <div class="screens-grid">
+
+    <!-- ─────────────── 1. LOGIN ─────────────── -->
+    <div class="screen-wrapper">
+      <div class="phone">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <svg width="14" height="10" fill="#fff"><rect x="0" y="4" width="2" height="6" rx=".5"/><rect x="3" y="3" width="2" height="7" rx=".5"/><rect x="6" y="1" width="2" height="9" rx=".5"/><rect x="9" y="0" width="2" height="10" rx=".5"/></svg>
+            <svg width="14" height="10" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.5 4.7L14 3C12.3 1.1 9.8 0 7 0S1.7 1.1 0 3l1.5 1.7C2.8 3 4.8 2 7 2z"/><path d="M7 5c1.4 0 2.6.6 3.5 1.5L12 5C10.7 3.8 8.9 3 7 3S3.3 3.8 2 5l1.5 1.5C4.4 5.6 5.6 5 7 5z"/><circle cx="7" cy="9" r="1.5"/></svg>
+            <svg width="22" height="10" fill="none"><rect x="0" y="1" width="18" height="8" rx="2" stroke="#fff" stroke-width="1.2"/><rect x="1.5" y="2.5" width="13" height="5" rx="1" fill="#fff"/><path d="M19.5 3.5v3a1.5 1.5 0 000-3z" fill="#fff"/></svg>
+          </div>
+        </div>
+        <div class="notch"></div>
+        <div class="screen-content">
+          <div id="login" class="screen" style="background:linear-gradient(180deg,#0D0D0D 0%,#141008 100%)">
+            <div class="inner">
+              <div class="logo-area">
+                <div class="app-icon">✂</div>
+                <h2>Barber Flow</h2>
+                <p class="subtitle">Seu estilo, nossa arte</p>
+              </div>
+              <div style="margin-bottom:24px">
+                <h3 style="color:#fff;font-size:18px;font-weight:700;margin:0 0 4px">Bem-vindo de volta 👋</h3>
+                <p style="color:#666;font-size:12px;margin:0">Faça login para continuar</p>
+              </div>
+              <div class="form">
+                <div>
+                  <label>E-MAIL</label>
+                  <div class="input-row">
+                    <svg width="16" height="16" fill="none" stroke="#666" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" transform="scale(.67)"/><polyline points="14.67,4 8,8.67 1.33,4" transform="scale(.67) translate(-.5 -.5)"/></svg>
+                    <span>seuemail@gmail.com</span>
+                  </div>
+                </div>
+                <div>
+                  <label>SENHA</label>
+                  <div class="input-row input-active">
+                    <svg width="16" height="16" fill="none" stroke="#C9A84C" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                    <span>••••••••</span>
+                    <svg style="margin-left:auto" width="16" height="16" fill="none" stroke="#555" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                </div>
+                <div class="forgot">Esqueci minha senha</div>
+                <div class="gold-btn">Entrar</div>
+                <div class="or-row"><div class="or-line"></div><span class="or-text">ou continue com</span><div class="or-line"></div></div>
+                <div class="google-btn">
+                  <div class="g-dot"></div>
+                  <span class="g-txt">Google</span>
+                </div>
+              </div>
+              <div class="login-footer">
+                <span>Não tem uma conta? </span><a>Cadastre-se</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div><span class="screen-label">Login</span></div>
+    </div>
+
+    <!-- ─────────────── 2. CADASTRO ─────────────── -->
+    <div class="screen-wrapper">
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><svg width="14" height="10" fill="#fff"><rect x="0" y="4" width="2" height="6" rx=".5"/><rect x="3" y="3" width="2" height="7" rx=".5"/><rect x="6" y="1" width="2" height="9" rx=".5"/><rect x="9" y="0" width="2" height="10" rx=".5"/></svg><svg width="14" height="10" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.5 4.7L14 3C12.3 1.1 9.8 0 7 0S1.7 1.1 0 3l1.5 1.7C2.8 3 4.8 2 7 2z"/><path d="M7 5c1.4 0 2.6.6 3.5 1.5L12 5C10.7 3.8 8.9 3 7 3S3.3 3.8 2 5l1.5 1.5C4.4 5.6 5.6 5 7 5z"/><circle cx="7" cy="9" r="1.5"/></svg><svg width="22" height="10" fill="none"><rect x="0" y="1" width="18" height="8" rx="2" stroke="#fff" stroke-width="1.2"/><rect x="1.5" y="2.5" width="13" height="5" rx="1" fill="#fff"/><path d="M19.5 3.5v3a1.5 1.5 0 000-3z" fill="#fff"/></svg></div></div>
+        <div class="notch"></div>
+        <div class="screen-content">
+          <div id="register" class="screen">
+            <div class="back-bar">
+              <div class="back-icon">‹</div>
+              <span class="back-txt">Voltar</span>
+            </div>
+            <div class="inner">
+              <div class="top-row">
+                <div class="reg-icon">✂</div>
+                <div><p class="sub" style="margin:0 0 2px">Barber Flow</p><h3>Criar conta</h3><p class="sub" style="margin:0">Preencha seus dados abaixo</p></div>
+              </div>
+              <div class="progress">
+                <div class="prog-bar active"></div>
+                <div class="prog-bar"></div>
+                <div class="prog-bar"></div>
+              </div>
+              <div class="fields">
+                <div><label>NOME COMPLETO</label><div class="f-row">👤 <span>João da Silva</span></div></div>
+                <div><label>E-MAIL</label><div class="f-row act">✉ <span>joao@gmail.com</span></div></div>
+                <div><label>TELEFONE</label><div class="f-row">📱 <span>(11) 99999-9999</span></div></div>
+                <div><label>SENHA</label><div class="f-row">🔒 <span>••••••••</span></div></div>
+                <div><label>CONFIRMAR SENHA</label><div class="f-row">🔒 <span>••••••••</span></div></div>
+              </div>
+              <div class="terms">
+                <div class="check">✓</div>
+                <p>Concordo com os <a>Termos de Uso</a> e <a>Política de Privacidade</a></p>
+              </div>
+              <div class="reg-btn">Criar Conta</div>
+              <div class="reg-footer"><span>Já tem conta? </span><a>Entrar</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div><span class="screen-label">Cadastro</span></div>
+    </div>
+
+    <!-- ─────────────── 3. CALENDÁRIO ─────────────── -->
+    <div class="screen-wrapper">
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><svg width="14" height="10" fill="#fff"><rect x="0" y="4" width="2" height="6" rx=".5"/><rect x="3" y="3" width="2" height="7" rx=".5"/><rect x="6" y="1" width="2" height="9" rx=".5"/><rect x="9" y="0" width="2" height="10" rx=".5"/></svg><svg width="14" height="10" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.5 4.7L14 3C12.3 1.1 9.8 0 7 0S1.7 1.1 0 3l1.5 1.7C2.8 3 4.8 2 7 2z"/><path d="M7 5c1.4 0 2.6.6 3.5 1.5L12 5C10.7 3.8 8.9 3 7 3S3.3 3.8 2 5l1.5 1.5C4.4 5.6 5.6 5 7 5z"/><circle cx="7" cy="9" r="1.5"/></svg><svg width="22" height="10" fill="none"><rect x="0" y="1" width="18" height="8" rx="2" stroke="#fff" stroke-width="1.2"/><rect x="1.5" y="2.5" width="13" height="5" rx="1" fill="#fff"/><path d="M19.5 3.5v3a1.5 1.5 0 000-3z" fill="#fff"/></svg></div></div>
+        <div class="notch"></div>
+        <div class="screen-content">
+          <div id="calendar" class="screen">
+            <div class="cal-header">
+              <div>
+                <p class="cal-title-label">AGENDAR HORÁRIO</p>
+                <h3>Março 2026</h3>
+              </div>
+              <div class="nav-btns">
+                <div class="nav-btn">←</div>
+                <div class="nav-btn">→</div>
+              </div>
+            </div>
+            <div class="body">
+              <div class="day-headers">
+                <div class="day-hdr">D</div><div class="day-hdr">S</div><div class="day-hdr">T</div>
+                <div class="day-hdr">Q</div><div class="day-hdr">Q</div><div class="day-hdr">S</div><div class="day-hdr">S</div>
+              </div>
+              <!-- Week 1 -->
+              <div class="week">
+                <div class="day empty"></div><div class="day empty"></div><div class="day empty"></div>
+                <div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div>
+              </div>
+              <!-- Week 2 -->
+              <div class="week">
+                <div class="day past">5</div><div class="day past">6</div><div class="day past">7</div>
+                <div class="day past">8</div><div class="day past">9</div><div class="day past">10</div><div class="day past">11</div>
+              </div>
+              <!-- Week 3 -->
+              <div class="week">
+                <div class="day past">12</div><div class="day past">13</div><div class="day today">14</div>
+                <div class="day">15</div><div class="day">16</div><div class="day dot">17</div><div class="day">18</div>
+              </div>
+              <!-- Week 4 -->
+              <div class="week">
+                <div class="day">19</div><div class="day">20</div><div class="day">21</div>
+                <div class="day">22</div><div class="day">23</div><div class="day">24</div><div class="day">25</div>
+              </div>
+              <!-- Week 5 -->
+              <div class="week">
+                <div class="day">26</div><div class="day">27</div><div class="day">28</div>
+                <div class="day empty"></div><div class="day empty"></div><div class="day empty"></div><div class="day empty"></div>
+              </div>
+
+              <div class="divider"></div>
+
+              <p class="section-title">ESCOLHA O BARBEIRO</p>
+              <div class="barbers-row">
+                <div class="barber-chip sel"><div class="b-icon">💈</div><div class="b-name">Rafael S.</div></div>
+                <div class="barber-chip"><div class="b-icon">✂</div><div class="b-name">Carlos M.</div></div>
+                <div class="barber-chip"><div class="b-icon">🪒</div><div class="b-name">Diego L.</div></div>
+              </div>
+
+              <p class="section-title">HORÁRIOS DISPONÍVEIS</p>
+              <div class="times-grid">
+                <div class="time-slot">09:00</div>
+                <div class="time-slot off">10:00</div>
+                <div class="time-slot">11:00</div>
+                <div class="time-slot sel">14:00</div>
+                <div class="time-slot off">15:00</div>
+                <div class="time-slot">16:00</div>
+              </div>
+
+              <div class="gold-btn" style="margin-top:14px;border-radius:14px">✓ Confirmar Agendamento</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div><span class="screen-label">Agendamento</span></div>
+    </div>
+
+    <!-- ─────────────── 4. ADMIN ─────────────── -->
+    <div class="screen-wrapper">
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><svg width="14" height="10" fill="#fff"><rect x="0" y="4" width="2" height="6" rx=".5"/><rect x="3" y="3" width="2" height="7" rx=".5"/><rect x="6" y="1" width="2" height="9" rx=".5"/><rect x="9" y="0" width="2" height="10" rx=".5"/></svg><svg width="14" height="10" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.5 4.7L14 3C12.3 1.1 9.8 0 7 0S1.7 1.1 0 3l1.5 1.7C2.8 3 4.8 2 7 2z"/><path d="M7 5c1.4 0 2.6.6 3.5 1.5L12 5C10.7 3.8 8.9 3 7 3S3.3 3.8 2 5l1.5 1.5C4.4 5.6 5.6 5 7 5z"/><circle cx="7" cy="9" r="1.5"/></svg><svg width="22" height="10" fill="none"><rect x="0" y="1" width="18" height="8" rx="2" stroke="#fff" stroke-width="1.2"/><rect x="1.5" y="2.5" width="13" height="5" rx="1" fill="#fff"/><path d="M19.5 3.5v3a1.5 1.5 0 000-3z" fill="#fff"/></svg></div></div>
+        <div class="notch"></div>
+        <div class="screen-content">
+          <div id="admin" class="screen">
+            <div class="adm-header">
+              <div class="adm-top">
+                <div>
+                  <p style="color:#888;font-size:10px;font-weight:600;letter-spacing:.5px;margin:0 0 2px">PAINEL DO BARBEIRO</p>
+                  <h3 style="color:#fff;font-size:15px;font-weight:700;margin:0">Olá, Rafael! 👋</h3>
+                </div>
+                <div class="adm-avatar">💈</div>
+              </div>
+              <div class="stats">
+                <div class="stat"><div class="stat-icon">📅</div><div class="stat-val" style="color:#C9A84C">12</div><div class="stat-lbl">Hoje</div></div>
+                <div class="stat"><div class="stat-icon">💰</div><div class="stat-val" style="color:#4CAF50">R$840</div><div class="stat-lbl">Faturamento</div></div>
+                <div class="stat"><div class="stat-icon">⭐</div><div class="stat-val" style="color:#FF9800">4.9★</div><div class="stat-lbl">Avaliação</div></div>
+              </div>
+            </div>
+            <div class="adm-body">
+              <div class="quick-actions">
+                <div class="qa"><div class="qa-icon">🔒</div><div class="qa-label">Bloquear Horário</div></div>
+                <div class="qa main"><div class="qa-icon" style="font-size:16px">+</div><div class="qa-label">Novo Serviço</div></div>
+                <div class="qa"><div class="qa-icon">📊</div><div class="qa-label">Relatório</div></div>
+              </div>
+              <div class="agenda-header">
+                <p class="section-title" style="margin:0">AGENDA DE HOJE</p>
+                <span class="see-all">Ver tudo</span>
+              </div>
+              <div class="apt done">
+                <div class="apt-time">09:00</div><div class="apt-line"></div>
+                <div><div class="apt-name">Ana Paula</div><div class="apt-svc">Corte Feminino</div></div>
+                <div class="apt-right"><div class="apt-val">R$ 60</div><div class="apt-status">✓ Concluído</div></div>
+              </div>
+              <div class="apt done">
+                <div class="apt-time">10:30</div><div class="apt-line"></div>
+                <div><div class="apt-name">Marcos T.</div><div class="apt-svc">Barba + Corte</div></div>
+                <div class="apt-right"><div class="apt-val">R$ 85</div><div class="apt-status">✓ Concluído</div></div>
+              </div>
+              <div class="apt current">
+                <div class="apt-time">14:00</div><div class="apt-line"></div>
+                <div><div class="apt-name">Ricardo A.</div><div class="apt-svc">Corte Masculino</div></div>
+                <div class="apt-right"><div class="apt-val">R$ 45</div><div class="apt-status">● Em andamento</div></div>
+              </div>
+              <div class="apt">
+                <div class="apt-time">15:30</div><div class="apt-line"></div>
+                <div><div class="apt-name">Felipe N.</div><div class="apt-svc">Barba</div></div>
+                <div class="apt-right"><div class="apt-val">R$ 40</div><div class="apt-status">Aguardando</div></div>
+              </div>
+              <div class="apt">
+                <div class="apt-time">17:00</div><div class="apt-line"></div>
+                <div><div class="apt-name">Bruno C.</div><div class="apt-svc">Corte + Hidrat.</div></div>
+                <div class="apt-right"><div class="apt-val">R$ 95</div><div class="apt-status">Aguardando</div></div>
+              </div>
+            </div>
+            <div class="bot-nav">
+              <div class="nav-tab active"><div class="t-icon">📅</div><div class="t-label">Agenda</div><div class="nav-dot"></div></div>
+              <div class="nav-tab"><div class="t-icon">👥</div><div class="t-label">Clientes</div></div>
+              <div class="nav-tab"><div class="t-icon">📊</div><div class="t-label">Relatório</div></div>
+              <div class="nav-tab"><div class="t-icon">⚙</div><div class="t-label">Config.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div><span class="screen-label">Painel Admin</span></div>
+    </div>
+
+    <!-- ─────────────── 5. PAGAMENTO ─────────────── -->
+    <div class="screen-wrapper">
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><svg width="14" height="10" fill="#fff"><rect x="0" y="4" width="2" height="6" rx=".5"/><rect x="3" y="3" width="2" height="7" rx=".5"/><rect x="6" y="1" width="2" height="9" rx=".5"/><rect x="9" y="0" width="2" height="10" rx=".5"/></svg><svg width="14" height="10" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.5 4.7L14 3C12.3 1.1 9.8 0 7 0S1.7 1.1 0 3l1.5 1.7C2.8 3 4.8 2 7 2z"/><path d="M7 5c1.4 0 2.6.6 3.5 1.5L12 5C10.7 3.8 8.9 3 7 3S3.3 3.8 2 5l1.5 1.5C4.4 5.6 5.6 5 7 5z"/><circle cx="7" cy="9" r="1.5"/></svg><svg width="22" height="10" fill="none"><rect x="0" y="1" width="18" height="8" rx="2" stroke="#fff" stroke-width="1.2"/><rect x="1.5" y="2.5" width="13" height="5" rx="1" fill="#fff"/><path d="M19.5 3.5v3a1.5 1.5 0 000-3z" fill="#fff"/></svg></div></div>
+        <div class="notch"></div>
+        <div class="screen-content">
+          <div id="payment" class="screen">
+            <div class="pay-header">
+              <div class="back-icon">‹</div>
+              <div>
+                <p style="color:#888;font-size:10px;font-weight:600;letter-spacing:.5px;margin:0">PAGAMENTO</p>
+                <h3 style="color:#fff;font-size:15px;font-weight:700;margin:0">Finalizar Agendamento</h3>
+              </div>
+            </div>
+            <div class="pay-body">
+              <div class="card" style="margin-bottom:14px">
+                <p class="section-title">RESUMO DO PEDIDO</p>
+                <div style="display:flex;gap:12px;margin-bottom:12px">
+                  <div class="order-icon">✂</div>
+                  <div class="order-info">
+                    <div class="order-name">Corte + Barba</div>
+                    <div class="order-sub">Rafael Silva · 14:00</div>
+                    <div class="order-date">14 Mar, 2026 · Sáb</div>
+                  </div>
+                </div>
+                <div style="border-top:1px solid #1a1a1a;padding-top:10px">
+                  <div class="line-row"><span>Corte Masculino</span><span>R$ 45,00</span></div>
+                  <div class="line-row"><span>Barba</span><span>R$ 40,00</span></div>
+                  <div class="line-row green"><span>Desconto (10%)</span><span>- R$ 8,50</span></div>
+                  <div class="total-row"><span class="total-label">Total</span><span class="total-val">R$ 76,50</span></div>
+                </div>
+              </div>
+
+              <p class="section-title">FORMA DE PAGAMENTO</p>
+
+              <div class="method sel">
+                <div class="m-icon">⚡</div>
+                <div><div class="m-title">PIX</div><div class="m-sub">Aprovação imediata</div></div>
+                <div class="radio filled"></div>
+              </div>
+              <div class="method">
+                <div class="m-icon">💳</div>
+                <div><div class="m-title">Cartão de Crédito</div><div class="m-sub">Até 12x sem juros</div></div>
+                <div class="radio empty"></div>
+              </div>
+              <div class="method">
+                <div class="m-icon">🏦</div>
+                <div><div class="m-title">Débito</div><div class="m-sub">À vista</div></div>
+                <div class="radio empty"></div>
+              </div>
+              <div class="coupon">
+                <span>🎟</span>
+                <span style="color:#555;font-size:12px;flex:1">Adicionar cupom de desconto</span>
+                <span style="color:#C9A84C;font-size:13px;font-weight:700">+</span>
+              </div>
+
+              <div class="pay-btn">⚡ Pagar com PIX · R$ 76,50</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div><span class="screen-label">Pagamento</span></div>
+    </div>
+
+    <!-- ─────────────── 6. AVALIAÇÃO ─────────────── -->
+    <div class="screen-wrapper">
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><svg width="14" height="10" fill="#fff"><rect x="0" y="4" width="2" height="6" rx=".5"/><rect x="3" y="3" width="2" height="7" rx=".5"/><rect x="6" y="1" width="2" height="9" rx=".5"/><rect x="9" y="0" width="2" height="10" rx=".5"/></svg><svg width="14" height="10" fill="#fff"><path d="M7 2C9.2 2 11.2 3 12.5 4.7L14 3C12.3 1.1 9.8 0 7 0S1.7 1.1 0 3l1.5 1.7C2.8 3 4.8 2 7 2z"/><path d="M7 5c1.4 0 2.6.6 3.5 1.5L12 5C10.7 3.8 8.9 3 7 3S3.3 3.8 2 5l1.5 1.5C4.4 5.6 5.6 5 7 5z"/><circle cx="7" cy="9" r="1.5"/></svg><svg width="22" height="10" fill="none"><rect x="0" y="1" width="18" height="8" rx="2" stroke="#fff" stroke-width="1.2"/><rect x="1.5" y="2.5" width="13" height="5" rx="1" fill="#fff"/><path d="M19.5 3.5v3a1.5 1.5 0 000-3z" fill="#fff"/></svg></div></div>
+        <div class="notch"></div>
+        <div class="screen-content">
+          <div id="rating" class="screen">
+            <div class="rat-header">
+              <div class="back-icon">‹</div>
+              <div>
+                <p style="color:#888;font-size:10px;font-weight:600;letter-spacing:.5px;margin:0">SUA OPINIÃO</p>
+                <h3 style="color:#fff;font-size:15px;font-weight:700;margin:0">Avalie o Atendimento</h3>
+              </div>
+            </div>
+            <div class="rat-body">
+              <div class="barber-card">
+                <div class="b-avatar">💈</div>
+                <div class="b-info">
+                  <div class="b-name">Rafael Silva</div>
+                  <div class="b-detail">Corte + Barba · 14/03/2026</div>
+                  <div class="b-stars">★★★★★ <span>4.9</span></div>
+                </div>
+                <div style="text-align:right">
+                  <div class="b-val">R$ 76,50</div>
+                  <div class="b-paid">✓ Pago</div>
+                </div>
+              </div>
+
+              <div class="overall">
+                <p class="section-title">AVALIAÇÃO GERAL</p>
+                <div class="big-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                <div class="overall-label">Excelente!</div>
+              </div>
+
+              <div class="aspects">
+                <p class="section-title">AVALIE CADA ASPECTO</p>
+                <div class="aspect-row"><span class="asp-label">Atendimento</span><div class="asp-stars"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span></div></div>
+                <div class="aspect-row"><span class="asp-label">Qualidade</span><div class="asp-stars"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span></div></div>
+                <div class="aspect-row"><span class="asp-label">Ambiente</span><div class="asp-stars"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="off">★</span></div></div>
+                <div class="aspect-row"><span class="asp-label">Pontualidade</span><div class="asp-stars"><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span><span class="on">★</span></div></div>
+              </div>
+
+              <p class="section-title">O QUE VOCÊ MAIS GOSTOU?</p>
+              <div class="tags">
+                <div class="tag sel">✓ Ótimo atendimento</div>
+                <div class="tag">Ambiente agradável</div>
+                <div class="tag sel">✓ Profissional</div>
+                <div class="tag sel">✓ Pontual</div>
+                <div class="tag">Custo-benefício</div>
+                <div class="tag sel">✓ Recomendo!</div>
+              </div>
+
+              <p class="section-title">DEIXE UM COMENTÁRIO</p>
+              <div class="comment-box">Ótimo profissional! Serviço impecável, atendimento rápido e ambiente muito agradável...</div>
+
+              <div class="rat-btn">★ Enviar Avaliação</div>
+              <p class="rat-note">Sua avaliação ajuda outros clientes a escolher melhor!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div><span class="screen-label">Avaliação</span></div>
+    </div>
+
+  </div><!-- /screens-grid -->
+
+  <div class="page-footer">
+    <p>Barber Flow App · Design de Telas · 2026</p>
+  </div>
+
+</body>
+</html>
