@@ -1,6 +1,6 @@
-﻿namespace BarberFlow.Domain.LoginItems;
+﻿namespace BarberFlow.Domain.UserItems;
 
 public interface IUserRepository
 {
-    Task<Token> GetUserByEmailAsync(string email, string password);
+    Task<User> GetCompleteUserByEmailAsync(string email);
 }
