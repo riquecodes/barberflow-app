@@ -1,6 +1,3 @@
 <Solution>
   <Project Path="backend/BarberFlow.API/BarberFlow.API.csproj" />
-  <Project Path="backend/BarberFlow.Application/BarberFlow.Application.csproj" />
-  <Project Path="backend/BarberFlow.Domain/BarberFlow.Domain.csproj" />
-  <Project Path="backend/BarberFlow.Infrastructure/BarberFlow.Infrastructure.csproj" />
 </Solution>

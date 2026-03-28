@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using BarberFlow.API.Services;
+using BarberFlow.API.Models;
 
 namespace BarberFlow.API.Controllers;
 
@@ -8,24 +12,28 @@ public class AuthController(IAuthService authService) : ControllerBase
 {
     private readonly IAuthService _authService = authService;
 
-    [Route("login")]
-    [HttpPost]
-    public async Task<IActionResult> Login(LoginCommand loginCommand)
+    [HttpPost("login")]
+    public async Task<ActionResult<AuthResponseDTO>> Login([FromBody] LoginDTO loginDTO)
     {
-        return Ok();
+        var authResponse = await _authService.Login(loginDTO);
+
+        return Ok(authResponse);
     }
 
-    [Route("register")]
-    [HttpPost]
-    public async Task<IActionResult> Register(RegisterCommand registerCommand)
+    [HttpPost("register")]
+    public async Task<ActionResult<UserResponseDTO>> Register([FromBody] RegisterDTO userRegister)
     {
-        return Ok();
+        var registerResponse = await _authService.Register(userRegister);
+        return Ok(registerResponse);
     }
 
-    [Route("logout")]
-    [HttpPost]
-    public async Task<IActionResult> Logout(LogoutCommand logoutCommand)
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
     {
-        return Ok();
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        await _authService.ChangePassword(userId, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
+        return Ok(new { message = "Password updated successfully!" });
     }
 }
