@@ -6,12 +6,12 @@ namespace BarberFlow.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ServicesController(IAccountService accountService) : ControllerBase
+    public class ServicesController(ServicesService accountService) : ControllerBase
     {
-        private readonly IAccountService _accountService = accountService;
+        private readonly ServicesService _accountService = accountService;
 
         [HttpGet("services/{id}")]
-        public async Task<ActionResult<AccountModel>> GetAccountById(int id)
+        public async Task<ActionResult<ServiceModel>> GetAccountById(int id)
         {
             var account = await _accountService.GetAccountById(id);
 
@@ -27,7 +27,7 @@ namespace BarberFlow.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AccountModel>> CreateService([FromBody] AccountModel account)
+        public async Task<ActionResult<ServiceModel>> CreateService([FromBody] ServiceModel account)
         {
             var newAccount = await _accountService.CreateAccount(account);
 

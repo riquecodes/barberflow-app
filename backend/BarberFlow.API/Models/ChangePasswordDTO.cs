@@ -1,8 +1,7 @@
-﻿namespace BarberFlow.API.Models
+﻿namespace BarberFlow.API.Models;
+
+public class ChangePasswordDTO
 {
-    public class ChangePasswordDTO
-    {
-        public required string CurrentPassword { get; set; }
-        public required string NewPassword { get; set; }
-    }
+    public required string CurrentPassword { get; set; }
+    public required string NewPassword { get; set; }
 }

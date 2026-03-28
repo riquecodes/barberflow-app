@@ -1,10 +1,5 @@
-using System.Text;
+ï»¿using System.Text;
 using System.Threading.RateLimiting;
-using BankingAPI.Context;
-using BankingAPI.Middlewares;
-using BankingAPI.Models;
-using BankingAPI.Repositories;
-using BankingAPI.Services;
 using BarberFlow.API.Context;
 using BarberFlow.API.Middlewares;
 using BarberFlow.API.Repositories;
@@ -12,6 +7,7 @@ using BarberFlow.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +27,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
             ValidIssuer = jwtIssuer,
             ValidAudience = jwtAudience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
+
+            ClockSkew = TimeSpan.Zero
         };
     });
 
@@ -39,30 +37,28 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "Banking API", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    c.SwaggerDoc("v1", new() { Title = "BarberFlow API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
         BearerFormat = "JWT",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your token."
+        In = ParameterLocation.Header,
+        Description = "Enter your JWT token"
     });
 
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
+        new OpenApiSecurityScheme
         {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
+            Scheme = "bearer",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http
+        },
+        Array.Empty<string>()
     });
 });
 
@@ -73,7 +69,7 @@ builder.Services.AddRateLimiter(options =>
             partitionKey: httpContext.User.Identity?.Name
                 ?? httpContext.Connection.RemoteIpAddress?.ToString()
                 ?? "anonymous",
-            factory: partition => new FixedWindowRateLimiterOptions
+            factory: _ => new FixedWindowRateLimiterOptions
             {
                 AutoReplenishment = true,
                 PermitLimit = 10,
@@ -84,35 +80,36 @@ builder.Services.AddRateLimiter(options =>
     options.OnRejected = async (context, token) =>
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-        await context.HttpContext.Response.WriteAsync("Limite de requisições excedido. Tente novamente em instantes.", token);
+        await context.HttpContext.Response.WriteAsync("Too many requests. Try again later.", token);
     };
 });
 
-builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddControllers();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    ));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.(builder.Configuration.GetConnectionString("DefaultConnection")));
-//TODO: Configurar o banco de dados
+builder.Services.AddScoped<AuthService>();
+
+builder.Services.AddScoped<IServicesRepository, ServicesRepository>();
+builder.Services.AddScoped<ServicesService>();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Banking API v1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BarberFlow API v1");
 });
 
 app.UseRateLimiter();
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();

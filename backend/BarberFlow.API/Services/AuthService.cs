@@ -6,124 +6,117 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace BarberFlow.API.Services
+namespace BarberFlow.API.Services;
+
+public class AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthController> logger)
 {
-    public class AuthService(IUserRepository userRepository, IConfiguration configuration, ILogger<AuthController> logger, IAccountRepository accountRepository) : IAuthService
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IConfiguration _configuration = configuration;
+    private readonly ILogger<AuthController> _logger = logger;
+
+    public async Task<UserResponseDTO> Login(LoginDTO loginDTO)
     {
-        private readonly IUserRepository _userRepository = userRepository;
-        private readonly IAccountRepository _accountRepository = accountRepository;
-        private readonly IConfiguration _configuration = configuration;
-        private readonly ILogger<AuthController> _logger = logger;
+        var user = await _userRepository.GetFullUserByEmail(loginDTO.Email);
 
-        public async Task<UserResponseDTO> Login(LoginDTO loginDTO)
+        if (user is null)
         {
-            var user = await _userRepository.GetFullUserByEmail(loginDTO.Email);
-
-            if (user is null)
-            {
-                _logger.LogWarning("Login failed for Email {Email}: user not found", loginDTO.Email);
-                throw new UnauthorizedAccessException("Invalid Email or Password!");
-            }
-            
-            if (!SecurityUtils.VerifyPassword(loginDTO.Password, user.PasswordHash, user.PasswordSalt)
-            {
-                _logger.LogWarning("Login failed for CPF {Cpf}: incorrect password", loginDTO.Email);
-                throw new UnauthorizedAccessException("Invalid CPF or Password!");
-            }
-
-            var authUser = new AuthResponseDTO
-            {
-                Token = SecurityUtils.GenerateJwtToken(user, _configuration)
-            };
-
-            return new UserResponseDTO
-            {
-                UserId = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Celphone = user.Celphone,
-                Role = user.Role,
-                Auth = authUser
-            };
+            _logger.LogWarning("Login failed for Email {Email}: user not found", loginDTO.Email);
+            throw new UnauthorizedAccessException("Email ou Senha incorretos!");
+        }
+        
+        if (!SecurityUtils.VerifyPassword(loginDTO.Password, user.PasswordHash))
+        {
+            _logger.LogWarning("Login failed for CPF {Cpf}: incorrect password", loginDTO.Email);
+            throw new UnauthorizedAccessException("Email ou Senha incorretos!");
         }
 
-        public async Task<UserResponseDTO> Register(RegisterDTO userRegister)
+        var authUser = new AuthResponseDTO
         {
-            var existingUser = await _userRepository.GetUserByEmail(userRegister.Email);
+            Token = SecurityUtils.GenerateJwtToken(user, _configuration)
+        };
 
-            if (existingUser is not null)
-            {
-                _logger.LogWarning("Register failed for CPF {Email}:  Email already exists", existingUser.Email);
-                throw new ArgumentException("A user with this Email already exists.");
-            }
+        return new UserResponseDTO
+        {
+            UserId = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Celphone = user.Celphone,
+            Role = user.Role,
+            Auth = authUser
+        };
+    }
 
-            ValidateRegisterDTO(userRegister);
+    public async Task<UserResponseDTO> Register(RegisterDTO userRegister)
+    {
+        var existingUser = await _userRepository.GetUserByEmail(userRegister.Email);
 
-            SecurityUtils.ValidatePasswordStrength(userRegister.Password);
-
-            SecurityUtils.CreatePasswordHash(userRegister.Password, out byte[] hash, out byte[] salt);
-
-            var newUser = new UserModel
-            {
-                Name = userRegister.Name,
-                Email = userRegister.Email,
-                Celphone = userRegister.Celphone,
-                PasswordHash = hash,
-                //PasswordSalt = salt
-            };
-
-            var createdUser = await _userRepository.CreateUser(newUser);
-
-            var authUser = new AuthResponseDTO
-            {
-                Token = SecurityUtils.GenerateJwtToken(newUser, _configuration)
-            };
-
-            return new UserResponseDTO
-            {
-                UserId = createdUser.Id,
-                Name = createdUser.Name,
-                Email = createdUser.Email,
-                Celphone = createdUser.Celphone,
-                Role = createdUser.Role,
-                Auth = authUser
-            };
+        if (existingUser is not null)
+        {
+            _logger.LogWarning("Register failed for CPF {Email}:  Email already exists", existingUser.Email);
+            throw new ArgumentException("Já existe uma conta com esse Email. Faça Login.");
         }
 
-        public async Task ChangePassword(int userId, string currentPassword, string newPassword)
+        ValidateRegisterDTO(userRegister);
+
+        SecurityUtils.ValidatePasswordStrength(userRegister.Password);
+
+        var passHash = SecurityUtils.CreatePasswordHash(userRegister.Password);
+
+        var newUser = new UserModel
         {
-            var user = await _userRepository.GetFullUserById(userId);
+            Name = userRegister.Name,
+            Email = userRegister.Email,
+            Celphone = userRegister.Celphone,
+            PasswordHash = passHash
+        };
 
-            if (user is null)
-            {
-                _logger.LogWarning("Change Password attempt failed for ID {id}: user not found", userId);
-                throw new KeyNotFoundException("User not found!");
-            }
+        var createdUser = await _userRepository.CreateUser(newUser);
 
-            if (!SecurityUtils.VerifyPassword(currentPassword, user.PasswordHash, user.PasswordSalt))
-            {
-                _logger.LogWarning("Change Password attempt failed for ID {id}: incorrect current password", userId);
-                throw new UnauthorizedAccessException("Current password is incorrect!");
-            }
+        var authUser = new AuthResponseDTO
+        {
+            Token = SecurityUtils.GenerateJwtToken(newUser, _configuration)
+        };
 
-            SecurityUtils.ValidatePasswordStrength(newPassword);
+        return new UserResponseDTO
+        {
+            UserId = createdUser.Id,
+            Name = createdUser.Name,
+            Email = createdUser.Email,
+            Celphone = createdUser.Celphone,
+            Role = createdUser.Role,
+            Auth = authUser
+        };
+    }
 
-            using (var hmac = new HMACSHA512())
-            {
-                user.PasswordSalt = hmac.Key;
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(newPassword));
-            }
+    public async Task ChangePassword(int userId, string currentPassword, string newPassword)
+    {
+        var user = await _userRepository.GetFullUserById(userId);
 
-            await _userRepository.UpdateUser(user.Id, user);
+        if (user is null)
+        {
+            _logger.LogWarning("Change Password attempt failed for ID {id}: user not found", userId);
+            throw new KeyNotFoundException("Usuário não encontrado!");
         }
 
-        private static void ValidateRegisterDTO(RegisterDTO userRegister)
+        if (!SecurityUtils.VerifyPassword(currentPassword, user.PasswordHash))
         {
-            if (string.IsNullOrEmpty(userRegister.Name)
-                || string.IsNullOrEmpty(userRegister.Email))
-            {
-                throw new ArgumentException("Name and Email are required fields!");
-            }
+            _logger.LogWarning("Change Password attempt failed for ID {id}: incorrect current password", userId);
+            throw new UnauthorizedAccessException("Senha atual está incorreta!");
+        }
+
+        SecurityUtils.ValidatePasswordStrength(newPassword);
+
+        user.PasswordHash = SecurityUtils.CreatePasswordHash(newPassword);
+
+        await _userRepository.UpdateUser(user.Id, user);
+    }
+
+    private static void ValidateRegisterDTO(RegisterDTO userRegister)
+    {
+        if (string.IsNullOrEmpty(userRegister.Name)
+            || string.IsNullOrEmpty(userRegister.Email))
+        {
+            throw new ArgumentException("Nome e Email são obrigatórios!");
         }
     }
 }

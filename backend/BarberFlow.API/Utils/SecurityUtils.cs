@@ -1,85 +1,72 @@
 ﻿using BarberFlow.API.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BarberFlow.API.Utils
+namespace BarberFlow.API.Utils;
+
+public class SecurityUtils
 {
-    public class SecurityUtils
+    public static string CreatePasswordHash(string password)
     {
-        public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+
+    public static string GenerateJwtToken(UserModel user, IConfiguration _configuration)
+    {
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]!);
+
+        var claims = new[]
         {
-            using var hmac = new HMACSHA512();
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Name),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
 
-        public static string GenerateJwtToken(UserModel user, IConfiguration _configuration)
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]!);
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpireMinutes"]!)),
+            Issuer = _configuration["Jwt:Issuer"],
+            Audience = _configuration["Jwt:Audience"],
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+        };
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:ExpireMinutes"]!)),
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-            };
+    public static bool VerifyPassword(string password, string storedHash)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, storedHash);
+    }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
+    public static void ValidatePasswordStrength(string password)
+    {
+        var errors = new List<string>();
 
-        public static bool VerifyPassword(string password, byte[] storedHash, byte[] storedSalt)
-        {
-            using var hmac = new HMACSHA512(storedSalt);
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return computedHash.SequenceEqual(storedHash);
-        }
+        if (string.IsNullOrWhiteSpace(password))
+            errors.Add("Senha não pode ser vazia.");
 
-        public static void ValidatePasswordStrength(string password)
-        {
-            var errors = new List<string>();
+        if (password.Length < 8)
+            errors.Add("Senha deve ser maior que 8 caracteres.");
 
-            if (string.IsNullOrWhiteSpace(password))
-                errors.Add("Password cannot be empty.");
+        if (!password.Any(char.IsUpper))
+            errors.Add("Senha deve conter pelo menos 1 letra maiúscula.");
 
-            if (password.Length < 8)
-                errors.Add("Password must be at least 8 characters long.");
+        if (!password.Any(char.IsLower))
+            errors.Add("Senha deve conter pelo menos 1 letra minúscula.");
 
-            if (!password.Any(char.IsUpper))
-                errors.Add("Password must contain at least one uppercase letter.");
+        if (!password.Any(char.IsDigit))
+            errors.Add("Senha deve conter pelo menos 1 número.");
 
-            if (!password.Any(char.IsLower))
-                errors.Add("Password must contain at least one lowercase letter.");
+        if (!password.Any(ch => "!@#$%^&*()_+-=[]{}|;:,.<>?".Contains(ch)))
+            errors.Add("Senha deve conter pelo menos 1 caracter especial.");
 
-            if (!password.Any(char.IsDigit))
-                errors.Add("Password must contain at least one number.");
-
-            if (!password.Any(ch => "!@#$%^&*()_+-=[]{}|;:,.<>?".Contains(ch)))
-                errors.Add("Password must contain at least one special character.");
-
-            if (errors.Any())
-                throw new ArgumentException(string.Join(" ", errors));
-        }
-
-        public static void CreateTransactionPinHash(string pin, out byte[] pinHash, out byte[] pinSalt)
-        {
-            using var hmac = new HMACSHA512();
-            pinHash = hmac.Key;
-            pinSalt = hmac.ComputeHash(Encoding.UTF8.GetBytes(pin));
-        }
+        if (errors.Count != 0)
+            throw new ArgumentException(string.Join(" ", errors));
     }
 }

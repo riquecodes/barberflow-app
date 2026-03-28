@@ -1,7 +1,6 @@
-﻿namespace BarberFlow.API.Models
+﻿namespace BarberFlow.API.Models;
+
+public class AuthResponseDTO
 {
-    public class AuthResponseDTO
-    {
-        public required string Token { get; set; }
-    }
+    public required string Token { get; set; }
 }
