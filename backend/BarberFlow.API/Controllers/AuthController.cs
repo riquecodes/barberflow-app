@@ -8,9 +8,9 @@ namespace BarberFlow.API.Controllers;
 
 [ApiController]
 [Route("barber/auth")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(AuthService authService) : ControllerBase
 {
-    private readonly IAuthService _authService = authService;
+    private readonly AuthService _authService = authService;
 
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDTO>> Login([FromBody] LoginDTO loginDTO)

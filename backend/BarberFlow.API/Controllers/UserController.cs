@@ -6,10 +6,10 @@ using BarberFlow.API.Services;
 namespace BarberFlow.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class UserController(IUserService userService) : ControllerBase
+    [Route("barber/users")]
+    public class UserController(UserService userService) : ControllerBase
     {
-        private readonly IUserService _userService = userService;
+        private readonly UserService _userService = userService;
 
         [Authorize(Roles = "admin")]
         [HttpGet]
@@ -25,15 +25,6 @@ namespace BarberFlow.API.Controllers
         public async Task<ActionResult<UserResponseDTO>> GetUserById(int id)
         {
             var user = await _userService.GetUserById(id);
-
-            return Ok(user);
-        }
-
-        [Authorize(Roles = "admin")]
-        [HttpGet("cpf/{cpf}")]
-        public async Task<ActionResult<UserResponseDTO>> GetUserByCpf(string cpf)
-        {
-            var user = await _userService.GetUserByCpf(cpf);
 
             return Ok(user);
         }
@@ -66,6 +57,15 @@ namespace BarberFlow.API.Controllers
             await _userService.DeleteUserById(id);
 
             return NoContent();
+        }
+
+        [Authorize]
+        [HttpPut("profile/{id}")]
+        public async Task<ActionResult<UserResponseDTO>> UpdateProfile(int id, [FromBody] UserModelDTO userDTO)
+        {
+            var updatedUser = await _userService.UpdateUser(id, userDTO);
+
+            return Ok(updatedUser);
         }
     }
 }

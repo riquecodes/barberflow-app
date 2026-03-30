@@ -25,11 +25,20 @@ public class ServicesRepository(AppDbContext context) : IServicesRepository
         return service;
     }
 
-    public async Task<ServiceModel> UpdateService(ServiceModel service)
+    public async Task<ServiceModel?> UpdateService(int serviceId, ServiceModel service)
     {
-        _context.Services.Update(service);
+        var updatedService = await GetServiceById(serviceId);
+
+        if (updatedService is null)
+            return null;
+
+        updatedService.Name = service.Name;
+        updatedService.Price = service.Price;
+        updatedService.Description = service.Description;
+        updatedService.Duration = service.Duration;
+
         await _context.SaveChangesAsync();
-        return service;
+        return updatedService;
     }
 
     public async Task<bool> DeleteService(int serviceId)

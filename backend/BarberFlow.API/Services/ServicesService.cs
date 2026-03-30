@@ -21,7 +21,7 @@ public class ServicesService(IServicesRepository serviceRepository)
         return services.Any() ? services : [];
     }
 
-    public async Task<ServiceModel> CreateService(ServiceModel service)
+    public async Task<ServiceModel> CreateService(ServiceModelDTO service)
     {
         // validação simples
         if (string.IsNullOrWhiteSpace(service.Name))
@@ -33,28 +33,40 @@ public class ServicesService(IServicesRepository serviceRepository)
         if (service.Duration <= 0)
             throw new ArgumentException("Duração do serviço tem que ser maior que zero.");
 
-        var createdService = await _serviceRepository.CreateService(service);
+        var newService = new ServiceModel
+        {
+            Name = service.Name,
+            Description = service.Description,
+            Price = service.Price,
+            Duration = service.Duration,
+        };
+
+        var createdService = await _serviceRepository.CreateService(newService);
 
         return createdService;
     }
 
-    public async Task<ServiceModel> UpdateService(ServiceModel service)
+    public async Task<ServiceModel> UpdateService(int serviceId, ServiceModelDTO service)
     {
-        var existing = await _serviceRepository.GetServiceById(service.ServiceId);
+        var serviceToUpdate = await _serviceRepository.GetServiceById(serviceId);
 
-        if (existing is null)
+        if (serviceToUpdate is null)
             throw new ArgumentException("Serviço não encontrado.");
 
-        return await _serviceRepository.UpdateService(service);
+        serviceToUpdate.Name = service.Name;
+        serviceToUpdate.Description = service.Description;
+        serviceToUpdate.Price = service.Price;
+        serviceToUpdate.Duration = service.Duration;
+
+        var serviceUpdated = await _serviceRepository.UpdateService(serviceId, serviceToUpdate);
+
+        return serviceUpdated is null ? throw new ArgumentException("Serviço não encontrado.") : serviceUpdated;
     }
 
     public async Task<bool> DeleteService(int id)
     {
         var existing = await _serviceRepository.GetServiceById(id);
 
-        if (existing is null)
-            throw new ArgumentException("Serviço não encontrado.");
-
-        return await _serviceRepository.DeleteService(id);
+        return existing is null ? throw new ArgumentException("Serviço não encontrado.") : await _serviceRepository.DeleteService(id);
     }
 }

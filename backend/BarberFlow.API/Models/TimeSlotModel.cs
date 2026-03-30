@@ -1,10 +1,13 @@
-﻿namespace BarberFlow.API.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BarberFlow.API.Models;
 
 public class TimeSlotModel
 {
     public int Id { get; set; }
 
-    public TimeSpan Time { get; set; } // Ex: 09:00, 09:30
+    [Column("hora")]
+    public TimeOnly Time { get; set; } // Ex: 09:00, 09:30
 }
 //TODO: DELETAR
 

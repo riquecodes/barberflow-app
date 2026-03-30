@@ -1,13 +1,25 @@
-﻿namespace BarberFlow.API.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BarberFlow.API.Models;
 
 public class UserModel
 {
+    [Column("id_user")]
     public int Id { get; set; }
+
+    [Column("nome")]
     public required string Name { get; set; }
+
+    [Column("telefone")]
     public string? Celphone { get; set; }
+
     public string Email { get; set; } = null!;
+
+    [Column("senhahash")]
     public required string PasswordHash { get; set; }
-    public string Role { get; set; } = "client";
+
+    [Column("roles")]
+    public string? Role { get; set; }
 }
 
 //# users (id, nome, cpf, telefone, email, senha)

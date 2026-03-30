@@ -1,14 +1,23 @@
-﻿namespace BarberFlow.API.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BarberFlow.API.Models;
 
 public class ServiceModel
 {
-    public int ServiceId { get; set; }
-    public string? Name { get; set; }
-    public decimal Price { get; set; }
-    public string? Description { get; set; }
-    public int Duration { get; set; }
+    [Column("id_service")]
+    public int Id { get; set; }
 
-    public UserModel User { get; set; } = null!;
+    [Column("nome")]
+    public string? Name { get; set; }
+
+    [Column("valor")]
+    public decimal Price { get; set; }
+
+    [Column("descricao")]
+    public string? Description { get; set; }
+
+    [Column("duracao")]
+    public int Duration { get; set; }
 }
 
 //# services(id, nome, valor, descricao, duracao)

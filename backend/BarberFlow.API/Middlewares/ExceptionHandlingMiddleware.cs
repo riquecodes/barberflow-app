@@ -3,16 +3,10 @@ using System.Text.Json;
 
 namespace BarberFlow.API.Middlewares
 {
-    public class ExceptionHandlingMiddleware
+    public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
-        readonly RequestDelegate _next;
-        readonly ILogger<ExceptionHandlingMiddleware> _logger;
-
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
+        readonly RequestDelegate _next = next;
+        readonly ILogger<ExceptionHandlingMiddleware> _logger = logger;
 
         public async Task InvokeAsync(HttpContext context)
         {
@@ -30,7 +24,7 @@ namespace BarberFlow.API.Middlewares
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             HttpStatusCode statusCode;
-            string message = ex.Message;
+            var message = ex.Message;
 
             switch (ex)
             {

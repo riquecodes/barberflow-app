@@ -4,18 +4,14 @@ using BarberFlow.API.Models;
 
 namespace BarberFlow.API.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(AppDbContext context) : IUserRepository
 {
-    private readonly AppDbContext _context;
-
-    public UserRepository(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     public async Task<IEnumerable<UserResponseDTO>> GetUsers()
     {
         var users = await _context.Users.ToListAsync();
+
         return users.Select(u => new UserResponseDTO
         {
             UserId = u.Id,
@@ -31,9 +27,7 @@ public class UserRepository : IUserRepository
         var user = await _context.Users.FindAsync(id);
 
         if (user is null)
-        {
             return null;
-        }
 
         return new UserResponseDTO
         {
@@ -50,9 +44,7 @@ public class UserRepository : IUserRepository
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user is null)
-        {
             return null;
-        }
 
         return new UserResponseDTO
         {
@@ -69,9 +61,7 @@ public class UserRepository : IUserRepository
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
         if (user is null)
-        {
             return null;
-        }
 
         return user;
     }
@@ -81,9 +71,7 @@ public class UserRepository : IUserRepository
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user is null)
-        {
             return null;
-        }
 
         return user;
     }
@@ -100,9 +88,7 @@ public class UserRepository : IUserRepository
         var updatedUser = await GetFullUserById(id);
 
         if (updatedUser is null)
-        {
             return null;
-        }
 
         updatedUser.Name = user.Name;
         updatedUser.Celphone = user.Celphone;
@@ -118,9 +104,7 @@ public class UserRepository : IUserRepository
         var userToDelete = await GetFullUserById(id);
         
         if (userToDelete is null)
-        {
             return false;
-        }
 
         _context.Users.Remove(userToDelete);
         await _context.SaveChangesAsync();

@@ -5,36 +5,47 @@ using BarberFlow.API.Services;
 namespace BarberFlow.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ServicesController(ServicesService accountService) : ControllerBase
+    [Route("barber/services")]
+    public class ServicesController(ServicesService servicesService) : ControllerBase
     {
-        private readonly ServicesService _accountService = accountService;
+        private readonly ServicesService _servicesService = servicesService;
 
-        [HttpGet("services/{id}")]
-        public async Task<ActionResult<ServiceModel>> GetAccountById(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ServiceModel>> GetServiceById([FromRoute] int id)
         {
-            var account = await _accountService.GetAccountById(id);
+            var account = await _servicesService.GetServiceById(id);
 
             return Ok(account);
         }
 
-        [HttpGet("{id}/balance")]
-        public async Task<ActionResult<decimal>> GetBalanceById(int id)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ServiceModel>>> GetAllServices()
         {
-            var balance = await _accountService.GetBalanceById(id);
+            var balance = await _servicesService.GetAllServices();
 
             return Ok(balance);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceModel>> CreateService([FromBody] ServiceModel account)
+        public async Task<ActionResult<ServiceModel>> CreateService([FromBody] ServiceModelDTO service)
         {
-            var newAccount = await _accountService.CreateAccount(account);
+            var newService = await _servicesService.CreateService(service);
 
             return CreatedAtAction(
-                nameof(GetAccountById), 
-                new { id = newAccount.Id },
-                newAccount);
+                nameof(GetServiceById), 
+                new { id = newService.Id },
+                newService);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ServiceModel>> UpdateService([FromRoute] int id, [FromBody] ServiceModelDTO service)
+        {
+            var newService = await _servicesService.UpdateService(id, service);
+
+            return CreatedAtAction(
+                nameof(GetServiceById),
+                new { id = newService.Id },
+                newService);
         }
     }
 }

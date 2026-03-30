@@ -10,7 +10,7 @@ public interface IServicesRepository
 
     Task<ServiceModel> CreateService(ServiceModel service);
 
-    Task<ServiceModel> UpdateService(ServiceModel service);
+    Task<ServiceModel?> UpdateService(int serviceId, ServiceModel service);
 
     Task<bool> DeleteService(int serviceId);
 }
