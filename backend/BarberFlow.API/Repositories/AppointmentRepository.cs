@@ -16,6 +16,20 @@ public class AppointmentRepository(AppDbContext context) : IAppointmentRepositor
                         && !a.IsCanceled);
     }
 
+    public async Task<IEnumerable<AppointmentModelDTO?>> GetMyAppointmentsAsync(int userId)
+    {
+        return await _context.Appointments
+            .Where(a => a.UserId == userId && !a.IsCanceled)
+            .Include(a => a.Service)
+            .Select(a => new AppointmentModelDTO
+            {
+                Date = a.Date,
+                Time = a.Time,
+                ServiceName = a.Service.Name,
+                ServicePrice = a.Service.Price
+            }).ToListAsync();
+    }
+
     public async Task CreateAsync(AppointmentModel appointment)
     {
         await _context.Appointments.AddAsync(appointment);

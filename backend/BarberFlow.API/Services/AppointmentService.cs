@@ -28,6 +28,16 @@ public class AppointmentService(AppDbContext context, IAppointmentRepository rep
         return available;
     }
 
+    public async Task<IEnumerable<AppointmentModelDTO?>> GetMyAppointments(int userId)
+    {
+        var myAppointments = await _repository.GetMyAppointmentsAsync(userId);
+
+        if (myAppointments is null)
+            return [];
+
+        return myAppointments;
+    }
+
     public async Task Create(int userId, int serviceId, DateOnly date, TimeOnly time)
     {
         var exists = await _repository.ExistsAsync(date, time);
