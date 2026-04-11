@@ -10,14 +10,14 @@ public class AppointmentService(AppDbContext context, IAppointmentRepository rep
     private readonly AppDbContext _context = context;
     private readonly IAppointmentRepository _repository = repository;
 
-    public async Task<IEnumerable<TimeOnly>> GetAvailableTimes(DateTime date)
+    public async Task<IEnumerable<TimeOnly>> GetAvailableTimes(DateOnly date)
     {
         var allTimes = await _context.TimeSlots
             .Select(t => t.Time)
             .ToListAsync();
 
         var busyTimes = await _context.Appointments
-            .Where(a => a.Date.Date == date.Date && !a.IsCanceled)
+            .Where(a => a.Date == date && !a.IsCanceled)
             .Select(a => a.Time)
             .ToListAsync();
 
@@ -28,19 +28,20 @@ public class AppointmentService(AppDbContext context, IAppointmentRepository rep
         return available;
     }
 
-    public async Task Create(int userId, int serviceId, DateTime date, TimeOnly time)
+    public async Task Create(int userId, int serviceId, DateOnly date, TimeOnly time)
     {
         var exists = await _repository.ExistsAsync(date, time);
 
         if (exists)
-            throw new Exception("Horário já está ocupado");
+            throw new ArgumentException("Horário já está ocupado");
 
         var appointment = new AppointmentModel
         {
             UserId = userId,
             ServiceId = serviceId,
             Date = date,
-            Time = time
+            Time = time,
+            IsCanceled = false
         };
 
         await _repository.CreateAsync(appointment);
