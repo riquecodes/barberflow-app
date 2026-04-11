@@ -12,9 +12,12 @@ public class AppointmentController(AppointmentService service) : ControllerBase
     private readonly AppointmentService _service = service;
 
     [HttpGet("disponiveis")]
-    public async Task<IActionResult> GetAvailable([FromQuery] DateTime date)
+    [Authorize]
+    public async Task<IActionResult> GetAvailable([FromQuery] string date)
     {
-        var result = await _service.GetAvailableTimes(date);
+        var parsedDate = DateOnly.ParseExact(date, "yyyy-MM-dd");
+
+        var result = await _service.GetAvailableTimes(parsedDate);
         return Ok(result);
     }
 
@@ -22,11 +25,13 @@ public class AppointmentController(AppointmentService service) : ControllerBase
     [Authorize]
     public async Task<IActionResult> Create(CreateAppointmentDTO dto)
     {
+        
         await _service.Create(dto.UserId, dto.ServiceId, dto.Date, dto.Time);
         return Ok("Agendamento criado com sucesso");
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<IActionResult> Cancel(int id)
     {
         await _service.Cancel(id);

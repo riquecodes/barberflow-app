@@ -2,9 +2,6 @@
 using BarberFlow.API.Models;
 using BarberFlow.API.Repositories;
 using BarberFlow.API.Utils;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace BarberFlow.API.Services;
 
@@ -26,7 +23,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         
         if (!SecurityUtils.VerifyPassword(loginDTO.Password, user.PasswordHash))
         {
-            _logger.LogWarning("Login failed for CPF {Cpf}: incorrect password", loginDTO.Email);
+            _logger.LogWarning("Login failed for Email {Email}: incorrect password", loginDTO.Email);
             throw new UnauthorizedAccessException("Email ou Senha incorretos!");
         }
 
@@ -52,7 +49,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
 
         if (existingUser is not null)
         {
-            _logger.LogWarning("Register failed for CPF {Email}:  Email already exists", existingUser.Email);
+            _logger.LogWarning("Register failed for Email {Email}:  Email already exists", existingUser.Email);
             throw new ArgumentException("Já existe uma conta com esse Email. Faça Login.");
         }
 
@@ -67,7 +64,8 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
             Name = userRegister.Name,
             Email = userRegister.Email,
             Celphone = userRegister.Celphone,
-            PasswordHash = passHash
+            PasswordHash = passHash,
+            Role = userRegister.Role
         };
 
         var createdUser = await _userRepository.CreateUser(newUser);
@@ -114,7 +112,8 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
     private static void ValidateRegisterDTO(RegisterDTO userRegister)
     {
         if (string.IsNullOrEmpty(userRegister.Name)
-            || string.IsNullOrEmpty(userRegister.Email))
+            || string.IsNullOrEmpty(userRegister.Email)
+            || string.IsNullOrEmpty(userRegister.Password))
         {
             throw new ArgumentException("Nome e Email são obrigatórios!");
         }

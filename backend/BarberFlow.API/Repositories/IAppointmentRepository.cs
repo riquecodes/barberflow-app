@@ -4,11 +4,11 @@ namespace BarberFlow.API.Repositories;
 
 public interface IAppointmentRepository
 {
-    Task<bool> ExistsAsync(DateTime date, TimeOnly time);
+    Task<bool> ExistsAsync(DateOnly date, TimeOnly time);
 
     Task CreateAsync(AppointmentModel appointment);
 
-    Task<IEnumerable<AppointmentModel>> GetByDateAsync(DateTime date);
+    Task<IEnumerable<AppointmentModel>> GetByDateAsync(DateOnly date);
 
     Task<AppointmentModel?> GetByIdAsync(int id);
 

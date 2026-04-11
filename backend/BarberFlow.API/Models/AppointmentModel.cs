@@ -13,7 +13,7 @@ public class AppointmentModel
     public int ServiceId { get; set; }
 
     [Column("data")]
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; }
 
     [Column("hora")]
     public TimeOnly Time { get; set; }

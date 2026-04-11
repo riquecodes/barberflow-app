@@ -8,10 +8,10 @@ public class AppointmentRepository(AppDbContext context) : IAppointmentRepositor
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<bool> ExistsAsync(DateTime date, TimeOnly time)
+    public async Task<bool> ExistsAsync(DateOnly date, TimeOnly time)
     {
         return await _context.Appointments
-            .AnyAsync(a => a.Date.Date == date.Date
+            .AnyAsync(a => a.Date == date
                         && a.Time == time
                         && !a.IsCanceled);
     }
@@ -22,12 +22,12 @@ public class AppointmentRepository(AppDbContext context) : IAppointmentRepositor
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<AppointmentModel>> GetByDateAsync(DateTime date)
+    public async Task<IEnumerable<AppointmentModel>> GetByDateAsync(DateOnly date)
     {
         return await _context.Appointments
             .Include(a => a.User)
             .Include(a => a.Service)
-            .Where(a => a.Date.Date == date.Date)
+            .Where(a => a.Date == date)
             .ToListAsync();
     }
 
