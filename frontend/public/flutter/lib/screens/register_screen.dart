@@ -54,9 +54,9 @@ class RegisterScreen extends StatelessWidget {
                           child: const Center(child: Text('✂', style: TextStyle(fontSize: 18))),
                         ),
                         const SizedBox(width: 10),
-                        Column(
+                        const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text('Criar conta', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
                             Text('Preencha seus dados abaixo', style: TextStyle(color: kMuted, fontSize: 11)),
                           ],

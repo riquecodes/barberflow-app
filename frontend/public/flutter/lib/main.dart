@@ -185,11 +185,11 @@ class GalleryScreen extends StatelessWidget {
               ),
 
               // ── Rodapé ──────────────────────────────
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(32),
+                  padding: EdgeInsets.all(32),
                   child: Column(
-                    children: const [
+                    children: [
                       Divider(color: Color(0xFF1A1A1A)),
                       SizedBox(height: 12),
                       Text('Barber Flow App · Flutter · 2026', style: TextStyle(color: Color(0xFF444444), fontSize: 12)),

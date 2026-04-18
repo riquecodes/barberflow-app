@@ -53,9 +53,9 @@ class _RatingScreenState extends State<RatingScreen> {
                 children: [
                   backIcon(context),
                   const SizedBox(width: 12),
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text('SUA OPINIÃO', style: TextStyle(color: kDim, fontSize: 10, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
                       Text('Avalie o Atendimento', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
                     ],
@@ -103,9 +103,9 @@ class _RatingScreenState extends State<RatingScreen> {
                               ],
                             ),
                           ),
-                          Column(
+                          const Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
-                            children: const [
+                            children: [
                               Text('R\$ 76,50', style: TextStyle(color: kGold, fontSize: 13, fontWeight: FontWeight.w700)),
                               SizedBox(height: 2),
                               Text('✓ Pago', style: TextStyle(color: kGreen, fontSize: 9, fontWeight: FontWeight.w600)),
@@ -181,8 +181,11 @@ class _RatingScreenState extends State<RatingScreen> {
                         final sel = _selectedTags.contains(i);
                         return GestureDetector(
                           onTap: () => setState(() {
-                            if (sel) _selectedTags.remove(i);
-                            else     _selectedTags.add(i);
+                            if (sel) {
+                              _selectedTags.remove(i);
+                            } else {
+                              _selectedTags.add(i);
+                            }
                           }),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -222,10 +225,10 @@ class _RatingScreenState extends State<RatingScreen> {
                     goldButton('★  Enviar Avaliação', radius: 16),
                     const SizedBox(height: 10),
 
-                    Center(
+                    const Center(
                       child: Text(
                         'Sua avaliação ajuda outros clientes a escolher melhor!',
-                        style: const TextStyle(color: Color(0xFF444444), fontSize: 11),
+                        style: TextStyle(color: Color(0xFF444444), fontSize: 11),
                         textAlign: TextAlign.center,
                       ),
                     ),

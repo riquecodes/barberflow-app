@@ -50,10 +50,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 children: [
                   backIcon(context),
                   const SizedBox(width: 12),
-                  Expanded(
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text('AGENDAR HORÁRIO', style: TextStyle(color: kDim, fontSize: 10, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
                         Text('Março 2026', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
                       ],

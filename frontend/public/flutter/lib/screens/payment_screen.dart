@@ -34,9 +34,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   backIcon(context),
                   const SizedBox(width: 12),
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text('PAGAMENTO', style: TextStyle(color: kDim, fontSize: 10, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
                       Text('Finalizar Agendamento', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
                     ],
@@ -74,10 +74,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 child: const Center(child: Text('✂', style: TextStyle(fontSize: 20))),
                               ),
                               const SizedBox(width: 12),
-                              Expanded(
+                              const Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Text('Corte + Barba',          style: TextStyle(color: kText,  fontSize: 13, fontWeight: FontWeight.w600)),
                                     SizedBox(height: 2),
                                     Text('Rafael Silva · 14:00',   style: TextStyle(color: kMuted, fontSize: 11)),
@@ -100,9 +100,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           Container(height: 1, color: const Color(0xFF1A1A1A)),
                           const SizedBox(height: 8),
 
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Text('Total', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
                               Text('R\$ 76,50', style: TextStyle(color: kGold, fontSize: 15, fontWeight: FontWeight.w700)),
                             ],
@@ -178,8 +178,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         border: Border.all(color: kBorder, style: BorderStyle.solid),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Text('🎟', style: TextStyle(fontSize: 16)),
                           SizedBox(width: 10),
                           Expanded(child: Text('Adicionar cupom de desconto', style: TextStyle(color: Color(0xFF555555), fontSize: 12))),

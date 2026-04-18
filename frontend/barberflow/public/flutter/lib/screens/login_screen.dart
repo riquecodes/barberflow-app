@@ -226,7 +226,7 @@ class LoginScreen extends StatelessWidget {
               Expanded(
                 child: Text(placeholder, style: const TextStyle(color: kDeep, fontSize: 13)),
               ),
-              if (suffix != null) suffix,
+              ?suffix,
             ],
           ),
         ),

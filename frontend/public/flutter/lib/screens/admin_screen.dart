@@ -45,10 +45,10 @@ class _AdminScreenState extends State<AdminScreen> {
                 children: [
                   Row(
                     children: [
-                      Expanded(
+                      const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text('PAINEL DO BARBEIRO', style: TextStyle(color: kDim, fontSize: 10, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
                             SizedBox(height: 2),
                             Text('Olá, Rafael! 👋', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),

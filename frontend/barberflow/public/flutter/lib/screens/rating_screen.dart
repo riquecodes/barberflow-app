@@ -181,8 +181,11 @@ class _RatingScreenState extends State<RatingScreen> {
                         final sel = _selectedTags.contains(i);
                         return GestureDetector(
                           onTap: () => setState(() {
-                            if (sel) _selectedTags.remove(i);
-                            else     _selectedTags.add(i);
+                            if (sel) {
+                              _selectedTags.remove(i);
+                            } else {
+                              _selectedTags.add(i);
+                            }
                           }),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

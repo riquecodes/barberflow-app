@@ -60,11 +60,11 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 32),
 
                 // ── Title ─────────────────────────────
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'Bem-vindo de volta 👋',
                         style: TextStyle(
@@ -105,11 +105,11 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // ── Esqueci senha ──────────────────────
-                Align(
+                const Align(
                   alignment: Alignment.centerRight,
                   child: Text(
                     'Esqueci minha senha',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: kGold,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -129,7 +129,7 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // ── Divisor ───────────────────────────
-                Row(children: const [
+                const Row(children: [
                   Expanded(child: Divider(color: Color(0xFF222222))),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
