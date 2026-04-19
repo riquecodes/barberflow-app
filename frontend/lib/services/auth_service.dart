@@ -20,6 +20,7 @@ class AuthService {
       await _storage.write(key: 'jwt_token', value: user.auth.token);
       await _storage.write(key: 'user_role', value: user.role);
       await _storage.write(key: 'user_id', value: user.userId.toString());
+      await _storage.write(key: 'user_name', value: user.name);
       return user;
     }
     throw Exception('Login falhou: ${response.statusCode}');
@@ -49,6 +50,7 @@ class AuthService {
       await _storage.write(key: 'jwt_token', value: user.auth.token);
       await _storage.write(key: 'user_role', value: user.role);
       await _storage.write(key: 'user_id', value: user.userId.toString());
+      await _storage.write(key: 'user_name', value: user.name);
       return user;
     }
     throw Exception('Registro falhou: ${response.statusCode}');
@@ -89,5 +91,14 @@ class AuthService {
 
   Future<void> logout() async {
     await _storage.deleteAll();
+  }
+
+  Future<String?> getUserName() async {
+    return await _storage.read(key: 'user_name');
+  }
+
+  Future<int?> getUserId() async {
+    final id = await _storage.read(key: 'user_id');
+    return id != null ? int.parse(id) : null;
   }
 }
