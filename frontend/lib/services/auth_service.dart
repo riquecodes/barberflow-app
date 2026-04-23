@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config/api_config.dart';
 import '../models/auth_models.dart';
+import '../utils/api_error.dart';
 
 class AuthService {
   final String _base = '${ApiConfig.baseUrl}/barber/auth';
@@ -23,7 +24,7 @@ class AuthService {
       await _storage.write(key: 'user_name', value: user.name);
       return user;
     }
-    throw Exception('Login falhou: ${response.statusCode}');
+    throw Exception(ApiError.parse(response));
   }
 
   Future<UserResponseDTO> register({
@@ -53,7 +54,7 @@ class AuthService {
       await _storage.write(key: 'user_name', value: user.name);
       return user;
     }
-    throw Exception('Registro falhou: ${response.statusCode}');
+    throw Exception(ApiError.parse(response));
   }
 
   Future<void> changePassword({
@@ -76,12 +77,21 @@ class AuthService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Erro ao alterar senha: ${response.statusCode}');
+      throw Exception(ApiError.parse(response));
     }
   }
 
   Future<String?> getToken() async {
     return await _storage.read(key: 'jwt_token');
+  }
+
+  Future<int?> getUserId() async {
+    final id = await _storage.read(key: 'user_id');
+    return id != null ? int.parse(id) : null;
+  }
+
+  Future<String?> getUserName() async {
+    return await _storage.read(key: 'user_name');
   }
 
   Future<bool> isAdmin() async {
@@ -91,14 +101,5 @@ class AuthService {
 
   Future<void> logout() async {
     await _storage.deleteAll();
-  }
-
-  Future<String?> getUserName() async {
-    return await _storage.read(key: 'user_name');
-  }
-
-  Future<int?> getUserId() async {
-    final id = await _storage.read(key: 'user_id');
-    return id != null ? int.parse(id) : null;
   }
 }

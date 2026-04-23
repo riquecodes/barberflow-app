@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 import '../services/auth_service.dart';
 import '../models/service_model.dart';
+import '../utils/api_error.dart';
 
 class ServicesService {
   final String _base = '${ApiConfig.baseUrl}/barber/services';
@@ -25,7 +26,7 @@ class ServicesService {
       final List data = jsonDecode(response.body);
       return data.map((e) => ServiceModel.fromJson(e)).toList();
     }
-    throw Exception('Erro ao buscar serviços: ${response.statusCode}');
+    throw Exception(ApiError.parse(response));
   }
 
   Future<ServiceModel> getServiceById(int id) async {
@@ -36,7 +37,7 @@ class ServicesService {
     if (response.statusCode == 200) {
       return ServiceModel.fromJson(jsonDecode(response.body));
     }
-    throw Exception('Serviço não encontrado: ${response.statusCode}');
+    throw Exception(ApiError.parse(response));
   }
 
   Future<ServiceModel> createService(ServiceModelDTO dto) async {
@@ -48,7 +49,7 @@ class ServicesService {
     if (response.statusCode == 201) {
       return ServiceModel.fromJson(jsonDecode(response.body));
     }
-    throw Exception('Erro ao criar serviço: ${response.statusCode}');
+    throw Exception(ApiError.parse(response));
   }
 
   Future<ServiceModel> updateService(int id, ServiceModelDTO dto) async {
@@ -60,6 +61,6 @@ class ServicesService {
     if (response.statusCode == 201) {
       return ServiceModel.fromJson(jsonDecode(response.body));
     }
-    throw Exception('Erro ao atualizar serviço: ${response.statusCode}');
+    throw Exception(ApiError.parse(response));
   }
 }
