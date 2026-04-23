@@ -24,6 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadData();
   }
 
+  String _formatTime(String time) {
+    return time.length >= 5 ? time.substring(0, 5) : time;
+  }
+
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
     try {
@@ -117,9 +121,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          IconButton(
-            onPressed: _logout,
-            icon: const Icon(Icons.logout, color: Colors.white38, size: 22),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () =>
+                    Navigator.pushNamed(context, '/change-password'),
+                icon: const Icon(Icons.lock_outline,
+                    color: Colors.white38, size: 22),
+              ),
+              IconButton(
+                onPressed: _logout,
+                icon: const Icon(Icons.logout,
+                    color: Colors.white38, size: 22),
+              ),
+            ],
           ),
         ],
       ),
@@ -232,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${a.date} às ${a.time}',
+                    '${a.date} às ${_formatTime(a.time)}', // ← corrigido
                     style: const TextStyle(
                         color: Colors.white54, fontSize: 12),
                   ),

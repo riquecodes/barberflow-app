@@ -22,7 +22,7 @@ class BarberFlowApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-         '/home': (context) => const HomeScreen(),
+        '/home': (context) => const HomeScreen(),
         '/booking': (context) => const BookingScreen(),
         '/change_password': (context) => const ChangePasswordScreen(),
       },

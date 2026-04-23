@@ -17,7 +17,7 @@ class _BookingScreenState extends State<BookingScreen> {
   final _servicesService = ServicesService();
   final _authService = AuthService();
 
-  int _step = 0; // 0 = serviço, 1 = data, 2 = horário
+  int _step = 0;
 
   List<ServiceModel> _services = [];
   ServiceModel? _selectedService;
@@ -32,6 +32,10 @@ class _BookingScreenState extends State<BookingScreen> {
   void initState() {
     super.initState();
     _loadServices();
+  }
+
+  String _formatTime(String time) {
+    return time.length >= 5 ? time.substring(0, 5) : time;
   }
 
   Future<void> _loadServices() async {
@@ -85,7 +89,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.bold)),
             content: Text(
-              'Seu horário às $_selectedTime foi confirmado.',
+              'Seu horário às ${_formatTime(_selectedTime!)} foi confirmado.',
               style: const TextStyle(color: Colors.white70),
             ),
             actions: [
@@ -425,7 +429,7 @@ class _BookingScreenState extends State<BookingScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              time,
+                              _formatTime(time), // ← corrigido
                               style: TextStyle(
                                 color: isSelected
                                     ? Colors.black
