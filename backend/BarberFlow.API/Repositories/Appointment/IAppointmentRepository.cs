@@ -16,4 +16,6 @@ public interface IAppointmentRepository
     Task<AppointmentModel?> GetByIdAsync(int id);
 
     Task CancelAsync(int id);
+
+    Task<IEnumerable<AdminAppointmentDTO>> GetAllAppointmentsAsync();
 }

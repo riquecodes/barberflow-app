@@ -19,12 +19,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     setState(() => _isLoading = true);
     try {
-      await _authService.login(
+      final user = await _authService.login(
         _emailController.text.trim(),
         _passwordController.text,
       );
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        final route = user.role == 'admin' ? '/admin' : '/home';
+        Navigator.pushReplacementNamed(context, route);
       }
     } catch (e) {
       if (mounted) {

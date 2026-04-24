@@ -70,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             slivers: [
               SliverToBoxAdapter(child: _buildHeader()),
               SliverToBoxAdapter(child: _buildNewAppointmentButton()),
+              SliverToBoxAdapter(child: _buildRateButton()),
               SliverToBoxAdapter(child: _buildSectionTitle()),
               _isLoading
                   ? const SliverToBoxAdapter(
@@ -163,6 +164,34 @@ class _HomeScreenState extends State<HomeScreen> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14)),
             elevation: 0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRateButton() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+      child: SizedBox(
+        width: double.infinity,
+        height: 48,
+        child: OutlinedButton.icon(
+          onPressed: () => Navigator.pushNamed(context, '/rating'),
+          icon: const Icon(Icons.star_outline,
+              color: Color(0xFFD4A017), size: 18),
+          label: const Text(
+            'Avaliar serviço',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFFD4A017),
+            ),
+          ),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Color(0xFFD4A017), width: 1.5),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14)),
           ),
         ),
       ),

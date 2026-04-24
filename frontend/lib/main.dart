@@ -4,6 +4,8 @@ import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/booking_screen.dart';
 import 'screens/change_password_screen.dart';
+import 'screens/admin_screen.dart';
+import 'screens/rating_screen.dart';
 
 void main() {
   runApp(const BarberFlowApp());
@@ -25,6 +27,8 @@ class BarberFlowApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/booking': (context) => const BookingScreen(),
         '/change_password': (context) => const ChangePasswordScreen(),
+        '/admin': (context) => const AdminScreen(),
+        '/rating': (context) => const RatingScreen(),
       },
     );
   }

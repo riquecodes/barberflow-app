@@ -48,4 +48,12 @@ public class AppointmentController(AppointmentService service) : ControllerBase
         await _service.Cancel(id);
         return Ok("Agendamento cancelado");
     }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> GetAllAppointments()
+    {
+        var appointments = await _service.GetAllAppointments();
+        return Ok(appointments);
+    }
 }

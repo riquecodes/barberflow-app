@@ -64,4 +64,23 @@ public class AppointmentRepository(AppDbContext context) : IAppointmentRepositor
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<AdminAppointmentDTO>> GetAllAppointmentsAsync()
+    {
+        return await _context.Appointments
+            .Include(a => a.User)
+            .Include(a => a.Service)
+            .Where(a => !a.IsCanceled)
+            .OrderBy(a => a.Date).ThenBy(a => a.Time)
+            .Select(a => new AdminAppointmentDTO
+            {
+                Id = a.Id,
+                UserName = a.User.Name,
+                ServiceName = a.Service.Name ?? "",
+                Date = a.Date,
+                Time = a.Time,
+                ServicePrice = a.Service.Price,
+                IsCanceled = a.IsCanceled
+            }).ToListAsync();
+    }
 }

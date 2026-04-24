@@ -69,4 +69,18 @@ class AppointmentService {
       throw Exception('Erro ao cancelar agendamento: ${response.statusCode}');
     }
   }
+
+  // GET /barber/agendamentos/admin
+  Future<List<AdminAppointmentModel>> getAllAppointmentsAdmin() async {
+    final response = await http.get(
+      Uri.parse('$_base/admin'),
+      headers: await _authHeaders(),
+    );
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((e) => AdminAppointmentModel.fromJson(e)).toList();
+    }
+    throw Exception('Erro ao buscar agendamentos: ${response.statusCode}');
+  }
 }

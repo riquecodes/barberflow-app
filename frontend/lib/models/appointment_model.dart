@@ -40,3 +40,34 @@ class CreateAppointmentDTO {
     'time': time,
   };
 }
+
+class AdminAppointmentModel {
+  final int id;
+  final String userName;
+  final String serviceName;
+  final String date;
+  final String time;
+  final double servicePrice;
+  final bool isCanceled;
+
+  AdminAppointmentModel({
+    required this.id,
+    required this.userName,
+    required this.serviceName,
+    required this.date,
+    required this.time,
+    required this.servicePrice,
+    required this.isCanceled,
+  });
+
+  factory AdminAppointmentModel.fromJson(Map<String, dynamic> json) =>
+      AdminAppointmentModel(
+        id: json['id'],
+        userName: json['userName'] ?? '',
+        serviceName: json['serviceName'] ?? '',
+        date: json['date'],
+        time: json['time'],
+        servicePrice: (json['servicePrice'] as num).toDouble(),
+        isCanceled: json['isCanceled'] ?? false,
+      );
+}

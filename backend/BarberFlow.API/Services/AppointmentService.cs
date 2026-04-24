@@ -61,4 +61,9 @@ public class AppointmentService(AppDbContext context, IAppointmentRepository rep
     {
         await _repository.CancelAsync(id);
     }
+
+    public async Task<IEnumerable<AdminAppointmentDTO>> GetAllAppointments()
+    {
+        return await _repository.GetAllAppointmentsAsync();
+    }
 }

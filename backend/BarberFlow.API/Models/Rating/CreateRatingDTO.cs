@@ -13,6 +13,6 @@ public class CreateRatingDTO
     [JsonIgnore]
     public int UserId { get; set; }
 
-    [JsonIgnore]
+    [JsonPropertyName("serviceId")]
     public int? ServiceId { get; set; }
 }
