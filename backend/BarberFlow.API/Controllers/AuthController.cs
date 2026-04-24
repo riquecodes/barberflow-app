@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using BarberFlow.API.Services;
-using BarberFlow.API.Models;
+using BarberFlow.API.Models.User;
+using BarberFlow.API.Models.Auth;
 
 namespace BarberFlow.API.Controllers;
 

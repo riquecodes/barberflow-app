@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BarberFlow.API.Models;
 using BarberFlow.API.Services;
 using Microsoft.AspNetCore.Authorization;
+using BarberFlow.API.Models.Service;
 
 namespace BarberFlow.API.Controllers
 {

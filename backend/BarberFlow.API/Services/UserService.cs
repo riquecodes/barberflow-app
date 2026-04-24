@@ -1,5 +1,6 @@
-﻿using BarberFlow.API.Models;
-using BarberFlow.API.Repositories;
+﻿using BarberFlow.API.Models.Auth;
+using BarberFlow.API.Models.User;
+using BarberFlow.API.Repositories.User;
 using BarberFlow.API.Utils;
 
 namespace BarberFlow.API.Services;

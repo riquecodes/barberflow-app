@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using BarberFlow.API.Models;
+using BarberFlow.API.Models.Appointment;
 using BarberFlow.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

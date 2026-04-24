@@ -1,5 +1,5 @@
-﻿using BarberFlow.API.Models;
-using BarberFlow.API.Repositories;
+﻿using BarberFlow.API.Models.Service;
+using BarberFlow.API.Repositories.Service;
 
 namespace BarberFlow.API.Services;
 

@@ -1,6 +1,6 @@
 ﻿using BarberFlow.API.Context;
-using BarberFlow.API.Models;
-using BarberFlow.API.Repositories;
+using BarberFlow.API.Models.Appointment;
+using BarberFlow.API.Repositories.Appointment;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarberFlow.API.Services;

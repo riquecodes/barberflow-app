@@ -2,7 +2,10 @@
 using System.Threading.RateLimiting;
 using BarberFlow.API.Context;
 using BarberFlow.API.Middlewares;
-using BarberFlow.API.Repositories;
+using BarberFlow.API.Repositories.Appointment;
+using BarberFlow.API.Repositories.Rating;
+using BarberFlow.API.Repositories.Service;
+using BarberFlow.API.Repositories.User;
 using BarberFlow.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -113,11 +116,14 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<AuthService>();
 
-builder.Services.AddScoped<IServicesRepository, ServicesRepository>();
 builder.Services.AddScoped<ServicesService>();
+builder.Services.AddScoped<IServicesRepository, ServicesRepository>();
 
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
+builder.Services.AddScoped<RatingService>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

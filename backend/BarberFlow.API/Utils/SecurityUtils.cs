@@ -1,4 +1,4 @@
-﻿using BarberFlow.API.Models;
+﻿using BarberFlow.API.Models.User;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
